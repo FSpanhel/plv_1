@@ -1,0 +1,22 @@
+#rise-header {
+    margin: 1%;
+    right: 1%;
+    color: orange;
+}
+
+#rise-footer {
+    margin: 1%;
+    right: 5%;
+}
+
+#rise-backimage {
+    display: block;
+    margin-top: 20%;
+    margin-left: auto;
+    margin-right: auto;
+    opacity: 0.20;
+}
+
+. reveal img {
+    max-width: 60%;
+}
