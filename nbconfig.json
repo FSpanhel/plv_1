@@ -1,0 +1,24 @@
+{
+    "load_extensions": {
+      "codefolding/main": true,
+      "collapsible_headings/main": true,
+      "qtconsole/qtconsole": true,
+      "ruler/main": true,
+      "toc2/main": true,
+      "code_font_size/code_font_size": true,
+      "python-markdown/main": true,
+      "splitcell/splitcell": true,
+      "hide_input/main": true
+    },
+    "rise": {
+      "enable_chalkboard": true,
+      "header": "Data Science Challenge",
+      "theme": "sky",
+      "transition": "slide",
+      "slideNumber": "c/t",
+      "width": "99%",
+      "height": "99%",
+      "footer": "Dr. Fabian Spanhel",
+      "scroll": true
+    }
+}
