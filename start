@@ -1,6 +1,0 @@
-#!/bin/bash
-#https://mybinder.readthedocs.io/en/latest/using/config_files.html#start-run-code-before-the-user-sessions-starts
-
-conda env vars set JUPYTER_CONFIG_DIR=$(pwd)/.jupyter
-
-exec "$@"
