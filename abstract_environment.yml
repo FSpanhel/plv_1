@@ -1,0 +1,30 @@
+name: plv
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python>=3.10, <3.11.5
+  - pip
+  - numpy=1.24.1, <2
+  - pandas=1.5.2, <2
+  - matplotlib=3.6.2, <4
+  # notebook
+  # - nb_conda=2.2.1, <3
+  - jupyter=1.0.0
+  # In general, notebook should be smaller than 7 so that jupyter_contrib_nbextensions and rise can be used
+  - notebook=6.5.5, <7
+  # Need to fix traitlets version so that notebook works because of https://github.com/jupyter/notebook/issues/7048
+  - traitlets=5.9.0
+  - jupytext=1.14.4, <2
+  # - jupyter_contrib_nbextensions=0.7.0
+  # good code
+  # - mypy=0.991
+  # - pandas-stubs=1.5.2  # Required so that type hints for pandas work
+  # - pre-commit=3.4.0, <4
+  # - dvc=3.21, <4
+  # - dvc-gdrive=2.20.0, <3
+  - pip:
+    - rise==5.7.1  # Dependencies not available on conda-forge
+    - -e .
+variables:
+  JUPYTER_CONFIG_DIR: $(pwd)/.jupyter
