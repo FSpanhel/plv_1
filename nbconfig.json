@@ -12,7 +12,7 @@
     },
     "rise": {
       "enable_chalkboard": true,
-      "header": "Data Science Challenge",
+      "header": "Stationarität von Zeitreihen mit Anwendung an einem praktischen Teil",
       "theme": "sky",
       "transition": "slide",
       "slideNumber": "c/t",
