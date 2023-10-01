@@ -1,0 +1,13 @@
+{
+    "rise": {
+      "enable_chalkboard": true,
+      "header": "Stationarität von Zeitreihen mit Anwendung an einem pratkischen Beispiel",
+      "theme": "sky",
+      "transition": "slide",
+      "slideNumber": "c/t",
+      "width": "99%",
+      "height": "99%",
+      "footer": "Dr. Fabian Spanhel",
+      "scroll": true
+    }
+}
