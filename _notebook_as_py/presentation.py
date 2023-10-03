@@ -15,10 +15,10 @@
 
 # %% slideshow={"slide_type": "skip"}
 from IPython.display import display, HTML
-# display(HTML("<style>.container { width:95% !important; }</style>"))
+display(HTML("<style>.container { width:95% !important; }</style>"))
 
 from plv.data import load_verbraucherpreisindex
-from plv.plot import plot_ts
+from plv.plot import plot_ts, plot_seasonality
 
 inflation = load_verbraucherpreisindex(filter_columns=["inflation"])
 
@@ -188,6 +188,7 @@ Börsenkurse allgemein, Bevölkerungsentwicklung, Preisindex, Wahlabsichtsbefrag
 # Evtl. Beispiel für Zeitreihenprozesse, sind die stationär? Darüber abstimmen, mit ja/nein/weiß nicht/kommt drauf an (Es reicht wenn sie die Erwartungs- und Varianzstationarität überprüfen)
 # 1. iid Exponential
 # 1. Summe zweier schwach stationärer Prozesse die voneinander unabhängig sind
+# 1. Weißes Rauschen.
 # 2. MA(1)
 # 3. AR(1)
 #
@@ -204,12 +205,14 @@ Börsenkurse allgemein, Bevölkerungsentwicklung, Preisindex, Wahlabsichtsbefrag
 # 1. Simulationsbilder in Abhängigkeit von a
 #     1. Simulation nicht stationär weil wir immer mit gleichen Wert starten, aber schauen wir mal was passiert
 #     1. Evtl. auch erst als Loop und dann durch Matrixmultiplikation effizienter.
+# <!--
 # 1.	Theoretischen Beweis skizzieren (schon sophisticated, bei Copulas einfacher)
 #     1. Nur mean stationarität zeigen
 #     1.	Beweis für Kovarianzstationarität analog (Kovarianz auch nur Erwartungswert), oder E[Y_tY_{t-h}^k], k = 0, 1
 #     1.	Beweis für strikt stationär schwierig, aber auch |a| <=1
 #         1.	Stärkere Annahmen and die Abhängigkeit der Störterme
 #         2.	Keine geschlossene Form für die Multivariate Verteilung im allgemeinen (nur durch Simulationen möglich)
+# -->
 
 # %% [markdown] slideshow={"slide_type": "slide"}
 # ## Skizze des Beweis für die schwache Stationarität des AR(1) Prozesses
@@ -220,13 +223,15 @@ Börsenkurse allgemein, Bevölkerungsentwicklung, Preisindex, Wahlabsichtsbefrag
 # Sei $Y_t = aY_{t-1} + U_t$, wobei $(U_t)_{t \in \mathbb{Z}}$ ein schwach stationärer stochastischer Prozess ist, so dass $Cov[U_t, U_h]=\sigma_U^2$ für $t=h$ und sonst $Cov[U_t, U_h]=0$ alle $t, h \in \mathbb{Z}$,  und $\sup_{t \in \mathbb{Z}} E[Y_t^2] < \infty$. <br><br>
 # Falls $|a| < 1$,  dann ist $(Y_t)_{t \in \mathbb{Z}}$ schwach stationär.
 # ---
-# - Der Bweis dieses Theorems ist nicht trivial.
+# - Der Beweis dieses Theorems ist nicht trivial.
 # - Im Folgenden werden die zwei Schritte deshalb nur skizziert.
 #     1. Limes Repräsentation von $Y_t$ als eine Funktion von $(U_t)_{t \in \mathbb{Z}}$.
 #     2. Berechung des Erwartungswerts und Kovarianzfunktion von $(Y_t)_{t \in \mathbb{Z}}$.
 
-# %% slideshow={"slide_type": "notes"}
-In der Literatur so nicht so einfach zu finden und nicht exakt
+# %% [markdown] slideshow={"slide_type": "notes"}
+# In der Literatur so nicht so einfach zu finden und nicht exakt
+#
+# Hier keine Konstante $c$ betrachtet.
 
 # %% [markdown] slideshow={"slide_type": "slide"}
 # **Schritt 1: Limes Repräsentation von $Y_t$ als eine Funktion von $(U_t)_{t \in \mathbb{Z}}$.**
@@ -337,8 +342,219 @@ In der Literatur so nicht so einfach zu finden und nicht exakt
 # - Diskussion: Ist da ein Strukturbruch passiert? Stationarität verletzt? Es ist möglich, wenn auch eher unwahrscheinlich, dass die Zeitreihen so ansteigt (mit Simulation rausfinden wie wahrscheinlich das ist, dass so ein Trend mindestens beobachtet wird)
 # - Rein datenbasiert das schwer zu beantworten. Eher Expertenwissen oder komplexere Modell wo externe Faktoren eine Rolle spielen (Konsumausgaben, Wirtschaftliche Entwicklung, was treibt die Inflation)
 
+# %% slideshow={"slide_type": "slide"}
+Wir betrachen ohne Corona
+- Am 31. Dezember 2019 wurde der Ausbruch einer neuen Lungenentzündung mit noch unbekannter Ursache in Wuhan in China bestätigt.[5] Am 30. Januar 2020 rief die Weltgesundheitsorganisation (WHO) angesichts der Ausbreitung und schnellen Zunahme der Infektionen mit dem Coronavirus 2019-nCoV eine internationale Gesundheitsnotlage au
+- Es gibt mehrere Möglichkeiten wie man schätzt, wie benutzen KQ
+Custom deterministic terms (deterministic)
+
+Accepts a DeterministicProcess
+
+Exogenous variables (exog)
+
+A DataFrame or array of exogenous variables to include in the model
+
+# %%
+from IPython.display import display, HTML
+display(HTML("<style>.container { width:95% !important; }</style>"))
+
+from plv.data import load_verbraucherpreisindex, max_inflation, corona_begin
+from plv.plot import plot_ts, plot_seasonality, plot_is_oos_forecast
+
+inflation = load_verbraucherpreisindex(filter_columns=["inflation"])
+
+# %%
+pre_corona = inflation.loc[:"2019"].copy()
+pre_corona = inflation.copy()
+y = inflation.copy()
+print(y.index[-1])
+
+# %%
+from plv.model import CrisisDummy, AR
+
+dummy = CrisisDummy(start=corona_begin, end=max_inflation)
+
+# %%
+ar = AR(lags=[1])
+
+# %%
+
+# %% slideshow={"slide_type": "slide"}
+y = inflation.loc[:"2024"].copy()
+y = inflation.copy()
+ar.fit(y)
+print(ar.params)
+print(ar.get_mean("2020", "2022"))  # outside crisis time
+# ar.oos_forecast(300)
+# plt.figure(figsize=(12, 6));
+plot_is_oos_forecast(ar, 300, oos_data=None);
+
+# %%
+### corona dummy
+import pandas as pd
+corona_dummy = pd.Series(0, index=pd.date_range(start=inflation.index[0], end='2049-12-01', freq='MS'))
+max_inflation = "2023-02-01"
+corona_dummy.loc["2020":max_inflation] = 1
+
+class CrisisDummy:
+    def __init__(self, start: str = "2020", end: str = max_inflation):
+        self.start = start
+        self.end = end
+    def get(self, lb: str = '1996-01-01', ub: str = '2049-12-01') -> pd.Series:
+        dummy = pd.Series(0, index=pd.date_range(start=lb, end=ub, freq='MS'))
+        dummy.loc[self.start:self.end] = 1
+        return dummy
+
+dummy = CrisisDummy(start="2020-01-01", end=max_inflation)
+# dummy = CrisisDummy(start="2020-01-01", end="2022-01-01")
+dummy = CrisisDummy(start="2020-01-01", end="2023-08-01")
+dummy_is = dummy.get(ub=pre_corona.index[-1])
+# dummy_is.loc["2019-11-01":"2023-04-01"]
+
+# %%
+plot_seasonality(pre_corona);
+
+# %%
+from statsmodels.tsa.ar_model import AutoReg
+model = AutoReg(
+    pre_corona.to_numpy(), lags = [1], seasonal=False, 
+    exog=dummy_is.to_numpy()
+)
+# res = model.fit()
+model = model.fit() # need to assign this! because it returns an result instance and only this can use predict without providing the params
+# model.__class__ = res
+
+# %%
+from pandas.tseries.offsets import DateOffset
+
+forecast_period = 10*30  # 300
+forecast_period = 300
+ts = pre_corona
+ub = pd.date_range(start=ts.index[-1], periods=forecast_period, freq="MS")[-1]
+dummy_oos = dummy.get(lb=ts.index[-1] + pd.DateOffset(months=1), ub=ts.index[-1] + pd.DateOffset(months=forecast_period))
+
+
+
+# %%
+forecast_values = model.predict(start=0, end=len(ts) + forecast_period - 1, dynamic=False, 
+                                exog=dummy_is.to_numpy(), exog_oos=dummy_oos.to_numpy()
+                               )
+index = pd.date_range(start=pre_corona.index[0], periods=len(forecast_values), freq='MS')
+forecast = pd.Series(forecast_values, index=index)
+forecast_is = forecast.loc[:ts.index[-1]]
+forecast_oos = forecast.loc[ts.index[-1] + pd.DateOffset(months=1):]
+forecast
+plot_ts(forecast_is)
+
+# %%
+forecast_values = model.predict(start=0, end=len(ts) + forecast_period - 1, dynamic=False, 
+                                exog=dummy_is.to_numpy(), exog_oos=dummy_oos.to_numpy()
+                               )
+index = pd.date_range(start=pre_corona.index[0], periods=len(forecast_values), freq='MS')
+forecast = pd.Series(forecast_values, index=index)
+forecast_is = forecast.loc[:ts.index[-1]]
+forecast_oos = forecast.loc[ts.index[-1] + pd.DateOffset(months=1):]
+forecast
+plot_ts(forecast)
+
+# %% hide_input=false
+forecast_is
+
+
+# %%
+
+# %%
+
+# %% slideshow={"slide_type": "slide"} hide_input=false
+def plot_is_oos_pred(is_pred, oos_pred):
+    ...
+import pandas as pd
+
+ts = y
+
+forecast = ar.oos_forecast(300)
+
+forecast_is = forecast.loc[:ts.index[-1]]
+forecast_oos = forecast.loc[ts.index[-1] + pd.DateOffset(months=1):]
+
+import matplotlib.pyplot as plt
+
+# Create the plot
+plt.figure(figsize=(12, 6))  # Optional: Set the figure size
+
+# plt.plot(ts.index, ts, color='gray', label='Data')
+
+# plt.plot(ts.index, ts, color='black', marker='x', linestyle="", label='Data')
+
+plt.plot(ts.index, ts, color='blue', linestyle='-', label='Data')
+
+# Add a vertical line at x-coordinate 5
+plt.axvline(x=ts.index[-1], color='gray', linestyle='--', label='In-sample Ende')
+
+# Plot the first vector as a blue solid line
+plt.plot(forecast_is.index, forecast_is, color='green', linestyle='-', label='In-sample one-step ahead forecast')
+
+forecast_oos_ = pd.concat([forecast_is.tail(1), forecast_oos])
+
+# Plot the second vector as a red dotted line
+plt.plot(forecast_oos_.index, forecast_oos_, color='red', linestyle='--', label='Out-of-sample multi-step ahead forecast')
+
+
+# Add labels and a legend
+plt.xlabel('Jahre')
+plt.ylabel('Inflationsrate')
+plt.title('Vergleich von in-sample und out-of-sample Vorhersagen')
+
+plt.legend()
+
+plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+
+# Ensure there is enough space on the right for the legend
+# plt.tight_layout()
+
+# plt.grid(linewidth=0.2)
+
+
+
+# Show the plot
+plt.grid(True, linewidth=0.5) 
+
+# %% slideshow={"slide_type": "slide"}
+vars(model)
+vars(model._results)
+
+# %%
+# mean
+0.137/(1-0.9)
+
+# %%
+vars(model)
+vars(model._results)
+
+# %%
+# mean
+0.051/(1-0.98)
+
+# %%
+import pandas as pd
+plot_ts(forecast)
+
+# %%
+import pandas as pd
+plot_ts(forecast)
+
+# %% slideshow={"slide_type": "notes"}
+Note: The mean is higher
+
+# %%
+Uses the first AR(1) and then do the predictions -> Add a Corona Dummy
+
+# %%
+model.plot_predict?
+
 # %% [markdown] slideshow={"slide_type": "slide"}
 # # Literatur
-# Hamilton
 #
-# Lütkepol MTSA
+# Hamilton, James D. Time Series Analysis. Princeton University Press, 1994. https://doi.org/10.2307/j.ctv14jx6sm.
+#
+# Lütkepohl, Helmut. New Introduction to Multiple Time Series Analysis. Springer, 2005. https://doi.org/10.1007/978-3-540-27752-1
