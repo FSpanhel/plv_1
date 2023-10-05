@@ -342,17 +342,19 @@ Börsenkurse allgemein, Bevölkerungsentwicklung, Preisindex, Wahlabsichtsbefrag
 # - Diskussion: Ist da ein Strukturbruch passiert? Stationarität verletzt? Es ist möglich, wenn auch eher unwahrscheinlich, dass die Zeitreihen so ansteigt (mit Simulation rausfinden wie wahrscheinlich das ist, dass so ein Trend mindestens beobachtet wird)
 # - Rein datenbasiert das schwer zu beantworten. Eher Expertenwissen oder komplexere Modell wo externe Faktoren eine Rolle spielen (Konsumausgaben, Wirtschaftliche Entwicklung, was treibt die Inflation)
 
-# %% slideshow={"slide_type": "slide"}
-Wir betrachen ohne Corona
-- Am 31. Dezember 2019 wurde der Ausbruch einer neuen Lungenentzündung mit noch unbekannter Ursache in Wuhan in China bestätigt.[5] Am 30. Januar 2020 rief die Weltgesundheitsorganisation (WHO) angesichts der Ausbreitung und schnellen Zunahme der Infektionen mit dem Coronavirus 2019-nCoV eine internationale Gesundheitsnotlage au
-- Es gibt mehrere Möglichkeiten wie man schätzt, wie benutzen KQ
-Custom deterministic terms (deterministic)
-
-Accepts a DeterministicProcess
-
-Exogenous variables (exog)
-
-A DataFrame or array of exogenous variables to include in the model
+# %% [markdown] slideshow={"slide_type": "slide"}
+# Wir betrachen ohne Corona
+# - Am 31. Dezember 2019 wurde der Ausbruch einer neuen Lungenentzündung mit noch unbekannter Ursache in Wuhan in China bestätigt.[5] Am 30. Januar 2020 rief die Weltgesundheitsorganisation (WHO) angesichts der Ausbreitung und schnellen Zunahme der Infektionen mit dem Coronavirus 2019-nCoV eine internationale Gesundheitsnotlage au
+# - Es gibt mehrere Möglichkeiten wie man schätzt, wie benutzen KQ
+# Custom deterministic terms (deterministic)
+#
+# Accepts a DeterministicProcess
+#
+# Exogenous variables (exog)
+#
+# A DataFrame or array of exogenous variables to include in the model
+#
+# $Y_t = c + aY_{t-1} + \delta D_t + U_t$
 
 # %%
 from IPython.display import display, HTML
@@ -371,23 +373,76 @@ print(y.index[-1])
 
 # %%
 from plv.model import CrisisDummy, AR
-
+print(corona_begin)
+print(max_inflation)
 dummy = CrisisDummy(start=corona_begin, end=max_inflation)
 
 # %%
 ar = AR(lags=[1])
 
 # %%
+import datetime
+ar.fit(y)
+
+n = len(pd.date_range(y.index[0], "2049-12-01", freq="MS"))
+pd.date_range(y.index[0], "2049-12-01", freq="MS")
+
+# ar.res.predict(0, n)
+
+# %%
+self = ar
+mean_ar = self.params["constant"] / (1 - self.params["a"])
+mean_ar
+mean_ar + self.dummy.get("2019", "2025") * self.params["dummy"]
+
+# %%
+
+# %%
+y.mean()
+
+# %%
+ar.get_mean("2020", "2023")
+
+# %%
+ar.params["constant"] / (1 - ar.params["a"])
+
+# %%
+y.mean()
+
+# %%
+y
+
+# %%
+# Je näher an nicht-stationär desto volatiler wird die Schätzung für den Mittelwert aus dem AR(1) Modell
+# Siehe inflation.loc["2020-01-01":"2021-06"] -> inflation.loc["2020-01-01":"2021-07"]
 
 # %% slideshow={"slide_type": "slide"}
-y = inflation.loc[:"2024"].copy()
-y = inflation.copy()
-ar.fit(y)
+import matplotlib.pyplot as plt
+
+y = inflation.loc[:"2018"].copy()
+print(y.index[0], y.index[-1])
+# y = inflation.copy()
+# ar.fit(y, dummy)
 print(ar.params)
-print(ar.get_mean("2020", "2022"))  # outside crisis time
+# print(ar.get_mean("2019", "2023"))  # outside crisis time
 # ar.oos_forecast(300)
 # plt.figure(figsize=(12, 6));
-plot_is_oos_forecast(ar, 300, oos_data=None);
+plot_is_oos_forecast(ar, 100, oos_data=None, plot_mean=True);
+plt.ylim(-1, 20)
+
+# %%
+X = y.shift(1).to_frame().assign(constant=1)
+d = X.assign(y=y)
+d = d.iloc[1:, :]
+d
+
+# %%
+import statsmodels.api as sm
+
+
+model = sm.OLS(d["y"].to_numpy().astype(float), d[["constant", "inflation"]].to_numpy().astype(float))
+results = model.fit()
+results.params
 
 # %%
 ### corona dummy
@@ -466,6 +521,61 @@ forecast_is
 # %%
 
 # %% slideshow={"slide_type": "slide"} hide_input=false
+def plot_is_oos_pred(is_pred, oos_pred):
+    ...
+import pandas as pd
+
+ts = y
+
+forecast = ar.oos_forecast(300)
+
+forecast_is = forecast.loc[:ts.index[-1]]
+forecast_oos = forecast.loc[ts.index[-1] + pd.DateOffset(months=1):]
+
+import matplotlib.pyplot as plt
+
+# Create the plot
+plt.figure(figsize=(12, 6))  # Optional: Set the figure size
+
+# plt.plot(ts.index, ts, color='gray', label='Data')
+
+# plt.plot(ts.index, ts, color='black', marker='x', linestyle="", label='Data')
+
+plt.plot(ts.index, ts, color='blue', linestyle='-', label='Data')
+
+# Add a vertical line at x-coordinate 5
+plt.axvline(x=ts.index[-1], color='gray', linestyle='--', label='In-sample Ende')
+
+# Plot the first vector as a blue solid line
+plt.plot(forecast_is.index, forecast_is, color='green', linestyle='-', label='In-sample one-step ahead forecast')
+
+forecast_oos_ = pd.concat([forecast_is.tail(1), forecast_oos])
+
+# Plot the second vector as a red dotted line
+plt.plot(forecast_oos_.index, forecast_oos_, color='red', linestyle='--', label='Out-of-sample multi-step ahead forecast')
+
+
+# Add labels and a legend
+plt.xlabel('Jahre')
+plt.ylabel('Inflationsrate')
+plt.title('Vergleich von in-sample und out-of-sample Vorhersagen')
+
+plt.legend()
+
+plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+
+# Ensure there is enough space on the right for the legend
+# plt.tight_layout()
+
+# plt.grid(linewidth=0.2)
+
+
+
+# Show the plot
+plt.grid(True, linewidth=0.5) 
+
+
+# %%
 def plot_is_oos_pred(is_pred, oos_pred):
     ...
 import pandas as pd

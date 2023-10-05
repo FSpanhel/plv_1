@@ -203,3 +203,152 @@ dta = sm.datasets.sunspots.load_pandas().data
 dta.index = pd.Index(sm.tsa.datetools.dates_from_range("1700", "2008"))
 dta.index.freq = dta.index.inferred_freq
 del dta["YEAR"]
+
+# %% [markdown]
+# # Widgets
+
+# %%
+import ipywidgets as widgets
+from IPython.display import display
+
+# Variable to be changed
+my_variable = 0
+
+# Create a slider widget
+slider = widgets.FloatSlider(
+    value=my_variable,
+    min=0.0,
+    max=100.0,
+    step=1.0,
+    description='Change My Variable:',
+)
+
+# Function to update the variable
+def update_variable(change):
+    my_variable = change.new
+    print(f"Updated My Variable: {my_variable}")
+    return my_variable
+
+# Link the slider to the update function
+slider.observe(update_variable, names='value')
+
+# Display the slider
+display(slider)
+
+
+# %%
+slider.observe?
+
+# %%
+my_variable
+
+# %% [markdown]
+# ## interactive widgets
+# https://hub.ovh2.mybinder.org/user/jupyter-widgets-tutorial-8dpcylxk/lab/tree/notebooks/01.Introduction/01.00-introduction.ipynb
+
+# %%
+slider = widgets.FloatSlider(
+    value=7.5,
+    min=5.0,
+    max=10.0,
+    step=0.1,
+    description='Input:',
+)
+
+b = widgets.FloatSlider(
+    value=7.5,
+    min=5.0,
+    max=10.0,
+    step=0.1,
+    description='Input:',
+)
+
+slider
+
+# %%
+square = slider.value * slider.value
+
+def handle_change(change):
+    global square
+    square = change.new
+    
+slider.observe(handle_change, 'value')
+
+# %%
+square
+
+
+# %% [markdown]
+# ## interact
+
+# %%
+def f(x):
+    print(x)
+    
+import ipywidgets as ipw
+
+widgets.interact(f, x=(0, 100));
+
+# %% [markdown]
+# ### interact with a plot
+# https://hub.ovh2.mybinder.org/user/jupyter-widgets-tutorial-8dpcylxk/lab/tree/notebooks/02.Widget_overview/01.Interact/01.00-Using-Interact.ipynb
+
+# %%
+# not optimal because figure is redrawn every time
+import matplotlib.pyplot as plt
+from ipywidgets import interact
+import matplotlib.pyplot as plt
+import numpy as np
+
+def f(m, b):
+    fig = plt.figure()
+    plt.clf()
+    plt.grid()
+    x = np.linspace(-10, 10, num=1000)
+    plt.plot(x, m * x + b)
+    plt.ylim(-5, 5)
+    plt.show()
+
+interact(f, m=(-2.0, 2.0), b=(-3, 3, 0.5))
+
+# %%
+interact?
+
+# %% [markdown]
+# ### mpl interactinons -> does not work
+
+# %%
+%matplotlib ipympl
+
+from mpl_interactions import ipyplot as iplt
+
+fig, ax = plt.subplots()
+ax.grid()
+ax.set_ylim(-30,30)
+
+# Define function in a way you can re-use in calculations
+def f(x, m, b):
+    return m * x + b
+
+x = np.linspace(-10, 10, num=1000)
+ctrls = iplt.plot(x, f, m=(-2,2), b=(-3, 3, 10))
+
+# %%
+import mpl_interactions.ipyplot as iplt
+import matplotlib.pyplot as plt
+import numpy as np
+
+x = np.linspace(0, np.pi, 100)
+tau = np.linspace(0.5, 10, 100)
+
+def f1(x, tau, beta):
+    return np.sin(x * tau) * x * beta
+def f2(x, tau, beta):
+    return np.sin(x * beta) * x * tau
+
+
+fig, ax = plt.subplots()
+controls = iplt.plot(x, f1, tau=tau, beta=(1, 10, 100), label="f1")
+iplt.plot(x, f2, controls=controls, label="f2")
+_ = plt.legend()
+plt.show()
