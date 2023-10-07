@@ -14,11 +14,14 @@
 # ---
 
 # %% slideshow={"slide_type": "skip"}
-from IPython.display import display, HTML
-display(HTML("<style>.container { width:95% !important; }</style>"))
+# For interactive plots
+%matplotlib ipympl  
 
-from plv.data import load_verbraucherpreisindex
-from plv.plot import plot_ts, plot_seasonality
+from IPython.display import display, HTML
+# display(HTML("<style>.container { width:95% !important; }</style>"))
+
+from plv.data import load_verbraucherpreisindex, corona_begin, max_inflation
+from plv.plot import plot_ts, plot_seasonality, InteractiveForecastPlot
 
 inflation = load_verbraucherpreisindex(filter_columns=["inflation"])
 
@@ -32,10 +35,12 @@ inflation = load_verbraucherpreisindex(filter_columns=["inflation"])
 #     - Zommen der Website
 
 # %% [markdown] slideshow={"slide_type": "slide"}
-# <div align="center" style="font-size:70px;">
+# <div align="center" style="font-size:60px;">
 # Probelehrveranstaltung für die Professur für Angewandte Mathematik mit Schwerpunkt Statistical Learning
 # <br><br>
 # Stationarität von Zeitreihen mit Anwendung an einem praktischen Beispiel
+# <br><br>
+# Dr. Fabian Spanhel
 # <div/>
 #     
 # <div align="left" style="font-size:16px;">
@@ -103,22 +108,19 @@ inflation = load_verbraucherpreisindex(filter_columns=["inflation"])
 import matplotlib as mpl
 mpl.rcParams['font.size'] = 18
 
-# %% slideshow={"slide_type": "slide"} hide_input=false
+# %% hide_input=false slideshow={"slide_type": "slide"}
 plot_ts(
     data=inflation,
-    title="Inflationsrate: Prozentuale Veränderung des Verbraucherpreisindex zum Vormonat. Quelle: https://www.destatis.de/",
+    title="Inflationsrate: Prozentuale Veränderung des Verbraucherpreisindex zum Vorjahresmonat. Quelle: https://www.destatis.de/",
     size=(20, 8)
 )
+import matplotlib.pyplot as plt
+import pandas as pd
+plt.axvline(x=pd.Timestamp(corona_begin), color='y', linestyle='--', label='Corona Beginn')
+plt.legend()
 # https://www-genesis.destatis.de/genesis/online?sequenz=tabelleErgebnis&selectionname=61111-0002&startjahr=1996#abreadcrumb
 
-# %% slideshow={"slide_type": "slide"} cell_style="split" hide_input=true
-plot_ts(
-    data=inflation,
-    title="Inflationsrate: Prozentuale Veränderung des Verbraucherpreisindex zum Vormonat",
-    size=(20, 18)
-)
-
-# %% [markdown] slideshow={"slide_type": "-"} cell_style="split"
+# %% [markdown] cell_style="split" slideshow={"slide_type": "-"}
 # - In der Praxis ist es häufig der Fall, dass Daten zu aufeinanderfolgenden Zeitpunkten mit gleichmäßigen Abstand erhoben werden.
 # - Diese Daten bezeichnen man als **Zeitreihe**.
 # - Anders als in Querschnittstudien, gibt es durch die Zeit eine natürlich Reihenfolge der Beobachtungen.
@@ -275,16 +277,20 @@ Börsenkurse allgemein, Bevölkerungsentwicklung, Preisindex, Wahlabsichtsbefrag
 #
 # $$
 # \begin{align*}
-# E[Y_t] & = E[\sum_{i=0}^{\infty}a^{i}U_{t-i}] \stackrel{\text{Fubini-Tonelli},\ |a|<1}{=} \sum_{i=0}^{\infty}a^{i}\underbrace{E[U_{t-i}]}_{=\ 0} = 0
+# E[Y_t] & = E[\sum_{i=0}^{\infty}a^{i}U_{t-i}] \stackrel{|a|<1,\text{ Fubini-Tonelli}}{=} \sum_{i=0}^{\infty}a^{i}\underbrace{E[U_{t-i}]}_{=\ 0} = 0
 # \end{align*}
 # $$
 #
 #
 # $$
-# \gamma(t, h) = Cov[Y_t, Y_{t-h}] = E[\sum_{i=0}^{\infty}a^{i}U_{t-i} \sum_{j=0}^{\infty}a^{j}U_{t-h-j}] \stackrel{\text{Fubini-Tonelli},\ |a|<1}{=}\sum_{i=0}^{\infty}\sum_{j=0}^{\infty}a^{i}a^{j}\underbrace{E[U_{t-i}U_{t-h-j}}_{\sigma_U^2 \text{ if } i = h + j, \text{ else } 0}]
-# \\
-# \stackrel{i:=h+j}{=} \sum_{j=0}^{\infty}a^{h+j}a^{j}\sigma_U^2 = a^h\sum_{j=0}^{\infty}a^{2j}\sigma_U^2
-# = \frac{a^h}{1-a^2}\sigma_U^2 \in \mathbb{R}
+# \gamma(t, h) = Cov[Y_t, Y_{t-h}] 
+# %= E[\sum_{i=0}^{\infty}a^{i}U_{t-i} \sum_{j=0}^{\infty}a^{j}U_{t-h-j}] 
+# \stackrel{|a|<1,\text{ Fubini-Tonelli},\ (U_t)_{t\in\mathbb{Z}} \text{Weißes Rauschen}}{=}
+# %\ldots
+# %\sum_{i=0}^{\infty}\sum_{j=0}^{\infty}a^{i}a^{j}\underbrace{E[U_{t-i}U_{t-h-j}}_{\sigma_U^2 \text{ if } i = h + j, \text{ else } 0}]
+# %\\
+# %\stackrel{i:=h+j}{=} \sum_{j=0}^{\infty}a^{h+j}a^{j}\sigma_U^2 = a^h\sum_{j=0}^{\infty}a^{2j}\sigma_U^2
+# \frac{a^h}{1-a^2}\sigma_U^2 \in \mathbb{R}
 # $$
 #
 # Somit ist $E[Y_t]=0$ und $\gamma(t, h)$ hängt nicht von $t$ ab. Folglich ist $(Y_t)_{t \in \mathbb{Z}}$ stationär. &#11035;
@@ -355,6 +361,18 @@ Börsenkurse allgemein, Bevölkerungsentwicklung, Preisindex, Wahlabsichtsbefrag
 # A DataFrame or array of exogenous variables to include in the model
 #
 # $Y_t = c + aY_{t-1} + \delta D_t + U_t$
+
+# %%
+from plv.model import CrisisDummy, AR1
+print(corona_begin)
+print(max_inflation)
+
+ar1 = AR1()
+dummy = CrisisDummy(start=corona_begin, end=max_inflation)
+
+# %%
+a = InteractiveForecastPlot(ar1, inflation, dummy, 750, figsize=(13, 5.5), ylim=(-1, 8.5))
+a.plot()
 
 # %%
 from IPython.display import display, HTML
@@ -520,7 +538,7 @@ forecast_is
 
 # %%
 
-# %% slideshow={"slide_type": "slide"} hide_input=false
+# %% hide_input=false slideshow={"slide_type": "slide"}
 def plot_is_oos_pred(is_pred, oos_pred):
     ...
 import pandas as pd

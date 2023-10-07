@@ -6,7 +6,7 @@ import statsmodels.api as sm
 import ipywidgets
 from ipywidgets import interact
 
-from plv.model import AR, CrisisDummy
+from plv.model import AR1, CrisisDummy
 from plv.data import corona_begin
 
 
@@ -21,7 +21,6 @@ def plot_ts(
     plt.plot(data.index, data)
     if title:
         plt.title(title)
-
 
 
 def plot_seasonality(data: pd.Series, freq="MS") -> Figure:
@@ -84,7 +83,9 @@ class InteractiveForecastPlot:
 
         # Plot
         line["in_sample"], = ax.plot(data["in_sample"].index, data["in_sample"],
-                                     label="Daten", marker="x") # , markersize=4)
+                                     label="Daten", 
+                                     marker="x", markersize=2,
+                                     )
         # , linestyle="", marker="x")
 
         line["forecast_origin"],  = ax.plot(
@@ -119,7 +120,7 @@ class InteractiveForecastPlot:
 
     def __init__(
             self,
-            ar: AR,
+            ar: AR1,
             y: pd.Series,
             dummy: CrisisDummy,
             forecast_horizon: int,
@@ -203,7 +204,7 @@ class InteractiveForecastPlot:
 
 # make a class? so that it plots faster?
 def plot_is_oos_forecast(
-        ar: AR, forecast_horizon: int, oos_data: None | pd.Series = None,
+        ar: AR1, forecast_horizon: int, oos_data: None | pd.Series = None,
         plot_mean: bool = False,
     ) -> Figure:
     ts = ar.ts.copy()
