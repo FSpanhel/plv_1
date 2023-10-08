@@ -48,3 +48,11 @@ def load_verbraucherpreisindex(
         vpi = vpi.loc[_slice, :].copy()
 
     return vpi.squeeze()
+
+
+class Inflation:
+    def load(self):
+        ...
+
+    def plot(self):
+        ...

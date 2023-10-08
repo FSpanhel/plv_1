@@ -3,11 +3,11 @@ from __future__ import annotations
 import pandas as pd
 import numpy as np
 from statsmodels.tsa.ar_model import AutoReg
-from plv.data import max_inflation
+from plv.data import max_inflation, corona_begin
 
 
 class CrisisDummy:
-    def __init__(self, start: str = "2020", end: str = max_inflation):
+    def __init__(self, start: str = corona_begin, end: str = max_inflation):
         "The Dummy is 1 if the index is between *start* and *end*."
         self.start = start
         self.end = end

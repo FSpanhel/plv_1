@@ -13,6 +13,23 @@
 #     name: python3
 # ---
 
+# %% slideshow={"slide_type": "slide"}
+%matplotlib inline
+
+import matplotlib.pyplot as plt
+
+from ipywidgets import interact
+
+def plot_graph(n):
+    plt.plot(range(n))
+    plt.show()
+
+
+interact(plot_graph, n=(2,30))
+
+# %% slideshow={"slide_type": "slide"}
+# assert False
+
 # %% slideshow={"slide_type": "skip"}
 # For interactive plots
 %matplotlib ipympl  
@@ -21,7 +38,7 @@ from IPython.display import display, HTML
 # display(HTML("<style>.container { width:95% !important; }</style>"))
 
 from plv.data import load_verbraucherpreisindex, corona_begin, max_inflation
-from plv.plot import plot_ts, plot_seasonality, InteractiveForecastPlot
+from plv.plot import plot_ts, plot_seasonality, InteractiveForecastPlot , plot_inflation
 
 inflation = load_verbraucherpreisindex(filter_columns=["inflation"])
 
@@ -33,6 +50,7 @@ inflation = load_verbraucherpreisindex(filter_columns=["inflation"])
 #     - Space
 #     - Shift + Tab
 #     - Zommen der Website
+#     - Zoomen hilft auch wenn ein interaktives Bild nicht angezeigt wird
 
 # %% [markdown] slideshow={"slide_type": "slide"}
 # <div align="center" style="font-size:60px;">
@@ -66,7 +84,7 @@ inflation = load_verbraucherpreisindex(filter_columns=["inflation"])
 # - Eine praktische Anwendung einens stationären AR(1) Prozess sehen
 
 # %% [markdown] slideshow={"slide_type": "notes"}
-# # About me [TODO: Auf Deutsch]
+# About me [TODO: Auf Deutsch]
 # <br>
 # <br>
 # <div style="font-size:40px;">
@@ -93,6 +111,7 @@ inflation = load_verbraucherpreisindex(filter_columns=["inflation"])
 # <br>
 # <br>
 # <br>
+# Hier noch Indexmietvertrag und Verbraucherpreisindex
 
 # %% [markdown] slideshow={"slide_type": "notes"}
 # - Wer von Ihnen hat einen Indexmietvertrag? 
@@ -109,35 +128,17 @@ import matplotlib as mpl
 mpl.rcParams['font.size'] = 18
 
 # %% hide_input=false slideshow={"slide_type": "slide"}
-plot_ts(
-    data=inflation,
-    title="Inflationsrate: Prozentuale Veränderung des Verbraucherpreisindex zum Vorjahresmonat. Quelle: https://www.destatis.de/",
-    size=(20, 8)
-)
-import matplotlib.pyplot as plt
-import pandas as pd
-plt.axvline(x=pd.Timestamp(corona_begin), color='y', linestyle='--', label='Corona Beginn')
-plt.legend()
-# https://www-genesis.destatis.de/genesis/online?sequenz=tabelleErgebnis&selectionname=61111-0002&startjahr=1996#abreadcrumb
+plot_inflation(inflation, figsize=(16, 6)) 
 
-# %% [markdown] cell_style="split" slideshow={"slide_type": "-"}
-# - In der Praxis ist es häufig der Fall, dass Daten zu aufeinanderfolgenden Zeitpunkten mit gleichmäßigen Abstand erhoben werden.
-# - Diese Daten bezeichnen man als **Zeitreihe**.
-# - Anders als in Querschnittstudien, gibt es durch die Zeit eine natürlich Reihenfolge der Beobachtungen.
-# - Dies führt in der Regel dazu, dass Beobachtungen, die zeitlich nahe beieinander liegen, enger miteinander verbunden sind als Beobachtungen, die weiter auseinander liegen.
-# - **Die Zeitreihenanalyse** befasst sich primär mit der Vorhersage von Zeitreihen.
-
-# %% slideshow={"slide_type": "notes"}
-- Wirtschaftsdaten (Börsenkurse, Zinsindizes, Absatzzahlen), Wetterdaten, Unternehmensdaten
-Börsenkurse allgemein, Bevölkerungsentwicklung, Preisindex, Wahlabsichtsbefragungen, Wetterdaten, Zinsindex
-- "Die Zeitreihenanalyse befasst sich in der Statistik mit der inferenzstatistischen Analyse von Zeitreihen und der Vorhersage von Trends (Trendextrapolation) zu ihrer künftigen Entwicklung"
-- Abhängigkeit durch Zeit an Inflation erklären: Das was in 2008 war relativ egal, was in letzter Zeit passiert
-
-# %% slideshow={"slide_type": "notes"}
-- Hamilton lesen
-- [x] Übungsunterlagen lesen
+# %% [markdown] slideshow={"slide_type": "notes"}
+# - Wirtschaftsdaten (Börsenkurse, Zinsindizes, Absatzzahlen), Wetterdaten, Unternehmensdaten
+# Börsenkurse allgemein, Bevölkerungsentwicklung, Preisindex, Wahlabsichtsbefragungen, Wetterdaten, Zinsindex
+# - "Die Zeitreihenanalyse befasst sich in der Statistik mit der inferenzstatistischen Analyse von Zeitreihen und der Vorhersage von Trends (Trendextrapolation) zu ihrer künftigen Entwicklung"
+# - Abhängigkeit durch Zeit an Inflation erklären: Das was in 2008 war relativ egal, was in letzter Zeit passiert
 
 # %% [markdown] slideshow={"slide_type": "slide"}
+# **Was ist eine Zeitreihe?**
+#
 # Im Folgenden, sei $T \subset \mathbb{T} \subset \mathbb{R}$.
 #
 # Wenn wir von einer (diskreten) Zeitreihe sprechen, können damit zwei verschiedene Begriffe gemeint sein:
@@ -149,12 +150,17 @@ Börsenkurse allgemein, Bevölkerungsentwicklung, Preisindex, Wahlabsichtsbefrag
 #
 
 # %% [markdown] slideshow={"slide_type": "slide"}
-# ## Illustration des Zusammenhangs zwischen Zeitreihendaten und -prozess
+# **Illustration des Zusammenhangs zwischen Zeitreihendaten und -prozess**
 
-# %% slideshow={"slide_type": "skip"}
-- Wichtig dass zu verstehen, in meiner Erfahrung war das unklar für manche Studierende oder sogar Doktoranden, dann ist auch alles leichter
+# %% [markdown] slideshow={"slide_type": "skip"}
+# - Wichtig dass zu verstehen, in meiner Erfahrung war das unklar für manche Studierende oder sogar Doktoranden, dann ist auch alles leichter
 
-# %% [markdown] slideshow={"slide_type": "slide"}
+# %% slideshow={"slide_type": "fragment"} hide_input=false
+%matplotlib widget
+from plv.plot import DataVsProcess
+DataVsProcess().plot(figsize=(14, 5))
+
+# %% [markdown] slideshow={"slide_type": "skip"}
 # ## Annahmen an einen Zeitreihenprozess für die statistische Inferenz und Modellierung
 # [TODO] Diese Folie weg oder woanders
 # Für die statistische Inferenz mit Zeitreihen müssen Annahmen getroffen werden, da in der Praxis meist nur eine Realisierung des die Zeitreihe generierenden Prozesses vorliegt. Die Annahme der Ergodizität bedeutet, dass Stichprobenmomente, die aus einer endlichen Zeitreihe gewonnen werden, für 
@@ -162,13 +168,41 @@ Börsenkurse allgemein, Bevölkerungsentwicklung, Preisindex, Wahlabsichtsbefrag
 # →
 # ∞T\rightarrow \infty  quasi gegen die Momente der Grundgesamtheit konvergieren.
 
+# %% [markdown] cell_style="center" slideshow={"slide_type": "notes"}
+# - In der Praxis ist es häufig der Fall, dass Daten zu aufeinanderfolgenden Zeitpunkten mit gleichmäßigen Abstand erhoben werden.
+# - Diese Daten bezeichnen man als **Zeitreihe**.
+# - Anders als in Querschnittstudien, gibt es durch die Zeit eine natürlich Reihenfolge der Beobachtungen.
+# - Dies führt in der Regel dazu, dass Beobachtungen, die zeitlich nahe beieinander liegen, enger miteinander verbunden sind als Beobachtungen, die weiter auseinander liegen.
+# - **Die Zeitreihenanalyse** befasst sich primär mit der Vorhersage von Zeitreihen.
+#
+# Die Punkte oben evtl. bei DataVsProcess einfügen (?)
+
 # %% [markdown] slideshow={"slide_type": "slide"}
 # # Stationarität
 
-# %% [markdown] slideshow={"slide_type": "slide"}
-# - In der Literatur gibt es 2 Definition von Stationarität, die Klasse der stochastischen Prozess einschränken
-# - Wir konzentieren uns hier auf die sogenannte schwache Stationarität
+# %% [markdown] slideshow={"slide_type": "fragment"}
+# - Für die statistische Analyse und Modellierung von Zeitreihen müssen Annahmen getroffen werden, da in der Praxis meist nur eine Realisierung des datengenerierenden Prozesses vorliegt.
+# - Neben Ergodizität ist Stationarität eine bedeutende Eigenschaft eines stochastischen Prozesses.
+# <!-- - Es gibt zwei Definition von Stationarität, die Klasse der stochastischen Prozess einschränken.
+# -->
+# - Wir konzentieren uns hier auf die sogenannte **schwache Stationarität**.
 #
+# <blockquote style="width: auto; background-color: 
+#                    lightyellow; color: black; 
+#                    margin: 70px; 
+#                    padding: 20px; 
+#                    border: 3px solid #ccc
+#                    ">
+# Definition: (<strong>Schwache Stationarität</strong>)<br>
+# Ein stochastischer Prozess $(Y_t)_{t\in \mathbb{T}}$ ist schwach stationär $:\!\!\iff$
+# <br><br>
+# 1. $E[Y_t] = \mu \in \mathbb{R}$ <br>
+# 2. $Cov[Y_t, Y_{t-h}] = \gamma(h) \in \mathbb{R}$
+# <br><br>
+# für alle $\forall t \in \mathbb{T}$ und $\forall h \in \mathbb{T}$
+# </blockquote>
+#
+#     
 # > **DEFINITION:** (Schwache Stationarität) <br>
 # > Ein stochastischer Prozess $(Y_t)_{t\in \mathbb{T}}$ ist schwach stationär $:\!\!\iff$
 # >
@@ -177,14 +211,27 @@ Börsenkurse allgemein, Bevölkerungsentwicklung, Preisindex, Wahlabsichtsbefrag
 # >
 # > für alle $\forall t \in \mathbb{T}$ und $\forall h \in \mathbb{T}$.
 
-# %% [markdown] slideshow={"slide_type": "notes"}
-# - Bei beiden Typen von Prozessen besitzen die endlichdimensionalen Verteilungen des Prozesses bestimmte zeitunabhängige Eigenschaften. Diese beziehen sich bei der Stationarität im engeren Sinn auf die gesamte Verteilungsgestalt und bei der Stationarität im weiteren Sinn nur auf die ersten beiden Momente der endlichdimensionalen Verteilungen
-
-# %% [markdown] slideshow={"slide_type": "slide"}
+# %% [markdown] slideshow={"slide_type": "skip"}
+# <!--
 # ## (Strikte Stationarität) und Kovarianzstationarität 
 # Frage hier an die Studierenden: Welche Definition ist stärker?
 # Evtl. hier auch wieder Grafik mit 4 Punkten und daran sichtbar machen (auf ZVs Ebene)
 #     Mittelwert der Trajektorien sollte gleich sein
+# -->
+
+# %% [markdown] slideshow={"slide_type": "skip"}
+# **Erste Beispiele für (schwach) stationäre Prozesse**
+#
+# 1. Sei $(Y_t)_{t\in \mathbb{T}}$ eine Folge von i.i.d. Zufallsvariablen.
+# 2. Sei $(Y_t)_{t\in \mathbb{T}}$ Weißes Rauschen, d.h., $E[Y_t] = 0$ für alle $t \in \mathbb{Z}$ und $Cov[Y_t, Y_h]=\sigma_U^2$ für $t=h$ und sonst $Cov[U_t, U_h]=0$ alle $t, h \in \mathbb{Z}$.
+# 3. Sei $(Y_t)_{t\in \mathbb{T}}$ definiert durch $Y_t = bU_{t-1} + U_t$, wobei $(U_t)_{t\in \mathbb{T}}$ Weißes Rauschen ist.
+#
+
+# %% [markdown] slideshow={"slide_type": "notes"}
+# - Die Annahme der Ergodizität bedeutet, z.B. dass das arithmetische Mittel einer Trajektorie über die Zeit gegen den selben Wert konvergiert wie das arithemtische Mittel von mehreren Realisierung eines Zeitpunktes, also  gegen den Erwartungswert der Zufallsvariable zu einem Zeitpunkt konvergiert.
+# - Bei beiden Typen von Prozessen besitzen die endlichdimensionalen Verteilungen des Prozesses bestimmte zeitunabhängige Eigenschaften. Diese beziehen sich bei der Stationarität im engeren Sinn auf die gesamte Verteilungsgestalt und bei der Stationarität im weiteren Sinn nur auf die ersten beiden Momente der endlichdimensionalen Verteilungen.
+# - Frage an die Studierende: Beispiele für Prozesse die schwach stationär oder nicht-stationär sind?
+#     - Eher nicht stationäre Beispiele: Temperatur (da Jahreszeiten, also saisonale Schwankungen), Körpergröße eines Menschens über die Jahre. Gemütszustand. Evaluation der PLV.
 
 # %% [markdown] slideshow={"slide_type": "notes"}
 # Evtl. Beispiel für Zeitreihenprozesse, sind die stationär? Darüber abstimmen, mit ja/nein/weiß nicht/kommt drauf an (Es reicht wenn sie die Erwartungs- und Varianzstationarität überprüfen)
@@ -195,8 +242,46 @@ Börsenkurse allgemein, Bevölkerungsentwicklung, Preisindex, Wahlabsichtsbefrag
 # 3. AR(1)
 #
 # Laut Andi auch Plots zeigen von nicht stationären Prozessen
+#
+# Weißes Rauschen einführen
 
 # %% [markdown] slideshow={"slide_type": "slide"}
+# **Der einfachste (schwach) stationäre Prozess**
+# <br><br>
+#
+# <blockquote style="width: auto; background-color: 
+#                    lightyellow; color: black; 
+#                    margin: 70px; 
+#                    padding: 20px; 
+#                    border: 3px solid #ccc
+#                    ">
+# Definition: (<strong>Weißes Rauschen</strong>)<br>
+# $(U_t)_{t\in \mathbb{T}}$ ist Weißes Rauschen $:\!\!\iff$ Für alle $t, h \in \mathbb{Z}$, mit $t\neq h$ gilt:
+# <br>
+#
+# 1. $E[U_t] = 0$
+# 2. $Var[U_t] = \sigma^2_U \in \mathbb{R}$
+# 3. $Cov[Y_t, Y_h] = 0$
+# </blockquote>
+
+# %% [markdown] slideshow={"slide_type": "slide"}
+# **Die Klasse der AR(1) Prozesse**
+# <blockquote style="width: auto; background-color: 
+#                    lightyellow; color: black; 
+#                    margin: 70px; 
+#                    padding: 20px; 
+#                    border: 3px solid #ccc
+#                    ">
+# Definition: (<strong>Autoregressiver Prozess der Ordnung 1</strong>)<br>
+# $(Y_t)_{t\in \mathbb{T}}$ ist ein autoregressiver Prozess der Ordnung 1  $:\!\!\iff$<br>
+# $Y_t = c + aY_{t-1} + U_{t}$ für alle ${t\in \mathbb{T}}$ und $(U_t)_{t\in \mathbb{T}}$ ist Weißes Rauschen.
+# </blockquote>
+#
+# - Wir bezeichnen diese Prozesse auch kurz als AR(1) Prozesse.
+# - Die Zufallsvariable $Y_t$ ist also linear abhängig von der Zufallsvariable $Y_{t-1}$ davor und einem Zufallsfehler $U_t$.
+# - Frage: Ist $(Y_t)_{t\in \mathbb{T}}$ (schwach) stationär?
+
+# %% [markdown] slideshow={"slide_type": "skip"}
 # ## Illustration anhand der Simulation eines (linearen) AR(1) Prozesses
 
 # %% [markdown] slideshow={"slide_type": "notes"}
@@ -206,7 +291,6 @@ Börsenkurse allgemein, Bevölkerungsentwicklung, Preisindex, Wahlabsichtsbefrag
 #     1. Was ist wenn a negativ ist? Interessant weil ich sehr gut schätzen kann (Bild mit Normalverteilung)
 # 1. Simulationsbilder in Abhängigkeit von a
 #     1. Simulation nicht stationär weil wir immer mit gleichen Wert starten, aber schauen wir mal was passiert
-#     1. Evtl. auch erst als Loop und dann durch Matrixmultiplikation effizienter.
 # <!--
 # 1.	Theoretischen Beweis skizzieren (schon sophisticated, bei Copulas einfacher)
 #     1. Nur mean stationarität zeigen
@@ -217,14 +301,53 @@ Börsenkurse allgemein, Bevölkerungsentwicklung, Preisindex, Wahlabsichtsbefrag
 # -->
 
 # %% [markdown] slideshow={"slide_type": "slide"}
+# **Simulation von Realisierungen eines AR(1) Prozesses**
+# - Um diese Frage zu untersuchen, ist es hilfreich Realisierungen des Prozesses zu generieren.
+# - Wie können wir $T$ Realisierungen eines AR(1) Prozess $Y_t = c + a Y_{t-1} + U_t$ generieren?
+
+# %% slideshow={"slide_type": "fragment"} cell_style="split"
+import numpy as np
+import matplotlib.pyplot as plt
+
+T = 1000
+(c, a) = (2, 0.5)
+u = np.random.normal(0, 1, T + 1)
+y = np.zeros(T, float)
+for t in range(1, T):
+    y[t] = c + a * y[t-1] + u[t]
+    
+plt.close("all")
+
+
+# %% slideshow={"slide_type": "fragment"} cell_style="split"
+plt.plot(y);
+
+# %% slideshow={"slide_type": "skip"}
+# For interactive plots
+%matplotlib ipympl 
+
+# %% slideshow={"slide_type": "slide"}
+from plv.plot import SimAR
+SimAR().plot(plot_mean_var=True, figsize=(16, 6))
+
+# %% [markdown] slideshow={"slide_type": "skip"}
 # ## Skizze des Beweis für die schwache Stationarität des AR(1) Prozesses
 
 # %% [markdown] slideshow={"slide_type": "slide"}
-# ---
-# **THEOREM:** (Hinreichende Bedingungen für die Stationarität eines AR(1) Prozesses) <br>
-# Sei $Y_t = aY_{t-1} + U_t$, wobei $(U_t)_{t \in \mathbb{Z}}$ ein schwach stationärer stochastischer Prozess ist, so dass $Cov[U_t, U_h]=\sigma_U^2$ für $t=h$ und sonst $Cov[U_t, U_h]=0$ alle $t, h \in \mathbb{Z}$,  und $\sup_{t \in \mathbb{Z}} E[Y_t^2] < \infty$. <br><br>
+# **Skizze des Beweis für die schwache Stationarität des AR(1) Prozesses**
+# <blockquote style="width: auto; background-color: 
+#                    lightyellow; color: black; 
+#                    margin: 70px; 
+#                    padding: 5px; 
+#                    border: 3px solid #ccc;
+#                    margin-bottom: -0px;
+#                    margin-top: 12px
+#                    ">
+# Theorem: (<strong>Hinreichende Bedingungen für die Stationarität eines AR(1) Prozesses</strong>)<br>
+# Sei $Y_t = aY_{t-1} + U_t$, wobei $(U_t)_{t \in \mathbb{Z}}$ Weißes Rauschen ist und $\sup_{t \in \mathbb{Z}} E[Y_t^2] < \infty$. <br><br>
 # Falls $|a| < 1$,  dann ist $(Y_t)_{t \in \mathbb{Z}}$ schwach stationär.
-# ---
+# </blockquote>
+#
 # - Der Beweis dieses Theorems ist nicht trivial.
 # - Im Folgenden werden die zwei Schritte deshalb nur skizziert.
 #     1. Limes Repräsentation von $Y_t$ als eine Funktion von $(U_t)_{t \in \mathbb{Z}}$.
@@ -239,27 +362,47 @@ Börsenkurse allgemein, Bevölkerungsentwicklung, Preisindex, Wahlabsichtsbefrag
 # **Schritt 1: Limes Repräsentation von $Y_t$ als eine Funktion von $(U_t)_{t \in \mathbb{Z}}$.**
 #
 # Rekursive Substituierung führt zu
+#
 # $$
-# Y_t = aY_{t-1} + U_t = a(aY_{t-2} + U_{t-1}) + U_t = \ldots = \underbrace{a^h Y_{t-h}}_{=:A_h} + \underbrace{\sum_{i=0}^{h-1}a^{i}U_{t-i}}_{=:B_h} =: X_h
+# \begin{align}
+# Y_t & = aY_{t-1} + U_t = a(aY_{t-2} + U_{t-1}) + U_t = \ldots = 
+# \\ & = \underbrace{a^h Y_{t-h}}_{=:A_h} + \underbrace{\sum_{i=0}^{h-1}a^{i}U_{t-i}}_{=:B_h} =: X_h
+# \end{align}
 # $$
+#
 # Was passiert mit $X_h$, wenn $h\to\infty$?
 
 # %% [markdown] slideshow={"slide_type": "slide"}
 # &#9888;&#65039; Da $X_h:=A_h + B_h$ eine Zufallsvariable ist, müssen wir zunächst eine Konvergenzart wählen.
-# <br>
-# ---
-# **DEFINITION:** (Konvergenz im quadratischen Mittel) <br>
+# <blockquote style="width: auto; background-color: 
+#                    lightyellow; color: black; 
+#                    margin: 70px; 
+#                    padding: 5px; 
+#                    border: 3px solid #ccc;
+#                    margin-bottom: -8px
+#                    ">
+# Definition: (<strong>Konvergenz im quadratischen Mittel</strong>)<br>
 # Eine Folge von Zufallsvariable $(X_t)_{t\in\mathbb{Z}}$ konvergiert im quadratischen Mittel gegen eine Zufallsvariable $X$ $:\!\!\iff$
-# $\lim_{t\to\infty} E[(X_t-X)^2] = 0$.
-# <br>
-# In diesem Fall schreiben wir $X_t \stackrel{2}{\to} X$.
-# ---
-# - Man kann zeigen, dass $A_t + B_t \stackrel{2}{\to} A + B$ falls $A_t \stackrel{2}{\to} A$ und  $B_t \stackrel{2}{\to} B$. (Umdrehen)
+# $\lim_{t\to\infty} E[(X_t-X)^2] = 0$. In diesem Fall schreiben wir $X_t \stackrel{2}{\to} X$.
+# </blockquote>
+
+# %% [markdown] slideshow={"slide_type": "fragment"}
+# <div style="margin-bottom: -2040px, margin-top: 0px">
+#
+# - Falls $A_t \stackrel{2}{\to} A$ und $B_t \stackrel{2}{\to} B$ dann gilt $A_t + B_t \stackrel{2}{\to} A + B$.
 # - Wir können also die Konvergenz von $A_h$ und $B_h$ separat betrachten.
-# - Dass $A_h \stackrel{2}{\to} 0$, wenn $|a|<1$ und $\sup_{t \in \mathbb{Z}} E[Y_t^2] < \infty$, lässt sich relativ leicht zeigen.
+#
+# </div>
+
+# %% [markdown] slideshow={"slide_type": "fragment"}
+# <div style="margin-bottom: -440px, margin-top: -100px">
+#
+# - Dass $A_h \stackrel{2}{\to} 0$, wenn $|a|<1$ und $\sup_{t \in \mathbb{Z}} E[Y_t^2] < \infty$, lässt sich leicht zeigen.
 # - Dass eine Zufallsvariable $B \in L^2$ existiert, gegen die $B_h$ im quadratischen Mittel konvergiert, folgt daraus, dass der $L^2$ Raum vollständig ist und man zeigen kann, dass $B_h$ eine Cauchy Folge ist falls $|a| < 1$ und $(U_t)_{t\in\mathbb{Z}}$ weißes Rauschen ist.
 # - Insgesamt folgt also $\exists X \in L^2\colon X_h \stackrel{2}{\to} X$.
-#
+# </div>
+#     
+#     
 
 # %% [markdown] slideshow={"slide_type": "notes"}
 # - One way to define the distance between X_t and X is the expectation of the squared difference.
@@ -271,13 +414,17 @@ Börsenkurse allgemein, Bevölkerungsentwicklung, Preisindex, Wahlabsichtsbefrag
 # $E[(\sum_{i=N+1}^Ma_iU_{t-i})^2] \stackrel{U is WN}{=} \sum_{i=N+1}^M a^{2i}E[U_{t-i}^2] = E[U_{t-i}^2]\underbrace{\sum_{i=N+1}^M a^{2i}}_{Cauchy}$
 
 # %% [markdown] slideshow={"slide_type": "slide"}
-# **Schritt 2:Berechung des Erwartungswerts und Kovarianzfunktion von $(Y_t)_{t \in \mathbb{Z}}$.**
+# **Schritt 2: Berechung des Erwartungswerts und Kovarianzfunktion von $(Y_t)_{t \in \mathbb{Z}}$.**
+# <!--
+# Falls $|a|<1$, folgt dass $\sum_{i=0}^{\infty}|a^{i}|\in \mathbb{R}$, und wenn  $(U_t)_{t\in\mathbb{Z}}$ Weißes Rauschen ist folgt aus [Fubini-Tonelli Theorems](https://en.wikipedia.org/wiki/Fubini's_theorem#Fubini-Tonelli) 
 #
 # Durch die Anwendung des [Fubini-Tonelli Theorems](https://en.wikipedia.org/wiki/Fubini's_theorem#Fubini-Tonelli) und der Tatsache, dass $\sum_{i=0}^{\infty}|a^{i}|\in \mathbb{R}$, falls $|a|<1$, und $(U_t)_{t\in\mathbb{Z}}$ Weißes Rauschen ist, folgt
+# -->
+# Es folgt
 #
 # $$
 # \begin{align*}
-# E[Y_t] & = E[\sum_{i=0}^{\infty}a^{i}U_{t-i}] \stackrel{|a|<1,\text{ Fubini-Tonelli}}{=} \sum_{i=0}^{\infty}a^{i}\underbrace{E[U_{t-i}]}_{=\ 0} = 0
+# E[Y_t] & = E[\sum_{i=0}^{\infty}a^{i}U_{t-i}] \stackrel{|a|<1,\ (U_t)_{t\in\mathbb{Z}} \text{Weißes Rauschen}, \text{ Fubini-Tonelli}}{=} \sum_{i=0}^{\infty}a^{i}\underbrace{E[U_{t-i}]}_{=\ 0} = 0
 # \end{align*}
 # $$
 #
@@ -285,35 +432,35 @@ Börsenkurse allgemein, Bevölkerungsentwicklung, Preisindex, Wahlabsichtsbefrag
 # $$
 # \gamma(t, h) = Cov[Y_t, Y_{t-h}] 
 # %= E[\sum_{i=0}^{\infty}a^{i}U_{t-i} \sum_{j=0}^{\infty}a^{j}U_{t-h-j}] 
-# \stackrel{|a|<1,\text{ Fubini-Tonelli},\ (U_t)_{t\in\mathbb{Z}} \text{Weißes Rauschen}}{=}
+# \stackrel{|a|<1,\ (U_t)_{t\in\mathbb{Z}} \text{Weißes Rauschen}, \text{ Fubini-Tonelli}}{=}
 # %\ldots
 # %\sum_{i=0}^{\infty}\sum_{j=0}^{\infty}a^{i}a^{j}\underbrace{E[U_{t-i}U_{t-h-j}}_{\sigma_U^2 \text{ if } i = h + j, \text{ else } 0}]
 # %\\
 # %\stackrel{i:=h+j}{=} \sum_{j=0}^{\infty}a^{h+j}a^{j}\sigma_U^2 = a^h\sum_{j=0}^{\infty}a^{2j}\sigma_U^2
-# \frac{a^h}{1-a^2}\sigma_U^2 \in \mathbb{R}
+# a^h\frac{\sigma_U^2}{1-a^2} \in \mathbb{R}
 # $$
 #
-# Somit ist $E[Y_t]=0$ und $\gamma(t, h)$ hängt nicht von $t$ ab. Folglich ist $(Y_t)_{t \in \mathbb{Z}}$ stationär. &#11035;
+# Somit ist $E[Y_t]=0$ und $\gamma(t, h) \in \mathbb{R}$ hängt nicht von $t$ ab. Folglich ist $(Y_t)_{t \in \mathbb{Z}}$ stationär. &#11035;
 
 # %% [markdown] slideshow={"slide_type": "notes"}
 # - Noch offener Punkt, wenn X_h to X, wieso ist dann E[Y_t] = E[X]? Also warum passt das alles?
 # - [Fubini-Tonelli Theorems](https://en.wikipedia.org/wiki/Fubini's_theorem#Fubini-Tonelli)
 # https://math.stackexchange.com/questions/1166994/linearity-of-expectation-for-infinite-sums
 
-# %% [markdown] slideshow={"slide_type": "slide"}
+# %% [markdown] slideshow={"slide_type": "skip"}
 # ## Testen auf Stationarität -> Am ende machen, low Priority
 
-# %% [markdown] slideshow={"slide_type": "slide"}
+# %% [markdown] slideshow={"slide_type": "skip"}
 # Angenommen unsere Daten werden durch den vorher beschriebenen AR(1) Prozess generiert, wie könnte somit ein Test auf (schwache) Stationarität aussehen?
 #
 # Wie könnte die Null- und Alternativhypothese aussehen?
 
-# %% [markdown] slideshow={"slide_type": "fragment"}
+# %% [markdown] slideshow={"slide_type": "skip"}
 # 1. Die vorherigen Simulationen vorhin haben illustriert und der Beweis gezeigt, dass ein AR(1) Prozess (schwach) stationär ist solange |a| < 1 ist.
 # 2. Man könnte also H_0: |a| >= 1 vs. H_1: |a| < 1.
 # 3. Da in der Praxis in der Regel a >= 0, Vereinfachung zu H_0: a >= 1 vs. H_1: a < 1
 
-# %% [markdown] slideshow={"slide_type": "slide"}
+# %% [markdown] slideshow={"slide_type": "skip"}
 # ## Der (Augmented) Dickey-Fuller Test
 # 5. Der Dickey-Fuller Test macht das im Prinzip (verwendet aber die Differenzen)
 # 5. Erweiterung zum Augmented Dickey-Fuller Test
@@ -329,7 +476,7 @@ Börsenkurse allgemein, Bevölkerungsentwicklung, Preisindex, Wahlabsichtsbefrag
 #
 # Evtl. Simulation zeigen, dass ADF Test nicht covered wenn Störterme N(0, \sigma^2)
 
-# %% [markdown] slideshow={"slide_type": "slide"}
+# %% [markdown] slideshow={"slide_type": "skip"}
 # ## Wie teste ich auf Stationarität in der Praxis?
 # 1.	Theoretisches Resultat dass es keinen Test gibt der das asymptotische immer zeigen kann
 #     1.	Vll. davor: Zeitreihen simulieren von statistischen Prozessen (u.a. Copula) und Frage ob schwach stationär (evtl. hierzu abstimmen)
@@ -363,322 +510,50 @@ Börsenkurse allgemein, Bevölkerungsentwicklung, Preisindex, Wahlabsichtsbefrag
 # $Y_t = c + aY_{t-1} + \delta D_t + U_t$
 
 # %%
-from plv.model import CrisisDummy, AR1
-print(corona_begin)
-print(max_inflation)
+%matplotlib ipympl 
 
-ar1 = AR1()
-dummy = CrisisDummy(start=corona_begin, end=max_inflation)
-
-# %%
-a = InteractiveForecastPlot(ar1, inflation, dummy, 750, figsize=(13, 5.5), ylim=(-1, 8.5))
-a.plot()
-
-# %%
 from IPython.display import display, HTML
-display(HTML("<style>.container { width:95% !important; }</style>"))
+# display(HTML("<style>.container { width:95% !important; }</style>"))
 
 from plv.data import load_verbraucherpreisindex, max_inflation, corona_begin
-from plv.plot import plot_ts, plot_seasonality, plot_is_oos_forecast
+from plv.plot import plot_ts, plot_seasonality, plot_is_oos_forecast, InteractiveForecastPlot
 
 inflation = load_verbraucherpreisindex(filter_columns=["inflation"])
 
 # %%
-pre_corona = inflation.loc[:"2019"].copy()
-pre_corona = inflation.copy()
-y = inflation.copy()
-print(y.index[-1])
+from plv.model import AR1
+
+ar1 = AR1()
+
+# %% [markdown]
+# ## Ohne Dummy
 
 # %%
-from plv.model import CrisisDummy, AR
-print(corona_begin)
-print(max_inflation)
-dummy = CrisisDummy(start=corona_begin, end=max_inflation)
+# inflation.forecast_plot(ar1)
 
 # %%
-ar = AR(lags=[1])
+a = InteractiveForecastPlot(ar1, inflation) # , dummy=None) # , figsize=(13, 5.5), ylim=(-1, 8.5))
+a.plot()
+
+# %% [markdown]
+# ## Mit dummy
 
 # %%
-import datetime
-ar.fit(y)
+from plv.model import CrisisDummy
+dummy = CrisisDummy()
+print(f"Corona Beginn = {dummy.start}.", f"Höhepunkt der Inflation = {dummy.end}")
+a = InteractiveForecastPlot(ar1, inflation, dummy=dummy)  # , figsize=(13, 5.5), ylim=(-1, 8.5))
+a.plot()
 
-n = len(pd.date_range(y.index[0], "2049-12-01", freq="MS"))
-pd.date_range(y.index[0], "2049-12-01", freq="MS")
-
-# ar.res.predict(0, n)
-
-# %%
-self = ar
-mean_ar = self.params["constant"] / (1 - self.params["a"])
-mean_ar
-mean_ar + self.dummy.get("2019", "2025") * self.params["dummy"]
-
-# %%
-
-# %%
-y.mean()
-
-# %%
-ar.get_mean("2020", "2023")
-
-# %%
-ar.params["constant"] / (1 - ar.params["a"])
-
-# %%
-y.mean()
-
-# %%
-y
-
-# %%
+# %% slideshow={"slide_type": "notes"}
 # Je näher an nicht-stationär desto volatiler wird die Schätzung für den Mittelwert aus dem AR(1) Modell
 # Siehe inflation.loc["2020-01-01":"2021-06"] -> inflation.loc["2020-01-01":"2021-07"]
 
-# %% slideshow={"slide_type": "slide"}
-import matplotlib.pyplot as plt
-
-y = inflation.loc[:"2018"].copy()
-print(y.index[0], y.index[-1])
-# y = inflation.copy()
-# ar.fit(y, dummy)
-print(ar.params)
-# print(ar.get_mean("2019", "2023"))  # outside crisis time
-# ar.oos_forecast(300)
-# plt.figure(figsize=(12, 6));
-plot_is_oos_forecast(ar, 100, oos_data=None, plot_mean=True);
-plt.ylim(-1, 20)
-
-# %%
-X = y.shift(1).to_frame().assign(constant=1)
-d = X.assign(y=y)
-d = d.iloc[1:, :]
-d
-
-# %%
-import statsmodels.api as sm
-
-
-model = sm.OLS(d["y"].to_numpy().astype(float), d[["constant", "inflation"]].to_numpy().astype(float))
-results = model.fit()
-results.params
-
-# %%
-### corona dummy
-import pandas as pd
-corona_dummy = pd.Series(0, index=pd.date_range(start=inflation.index[0], end='2049-12-01', freq='MS'))
-max_inflation = "2023-02-01"
-corona_dummy.loc["2020":max_inflation] = 1
-
-class CrisisDummy:
-    def __init__(self, start: str = "2020", end: str = max_inflation):
-        self.start = start
-        self.end = end
-    def get(self, lb: str = '1996-01-01', ub: str = '2049-12-01') -> pd.Series:
-        dummy = pd.Series(0, index=pd.date_range(start=lb, end=ub, freq='MS'))
-        dummy.loc[self.start:self.end] = 1
-        return dummy
-
-dummy = CrisisDummy(start="2020-01-01", end=max_inflation)
-# dummy = CrisisDummy(start="2020-01-01", end="2022-01-01")
-dummy = CrisisDummy(start="2020-01-01", end="2023-08-01")
-dummy_is = dummy.get(ub=pre_corona.index[-1])
-# dummy_is.loc["2019-11-01":"2023-04-01"]
+# %% [markdown]
+# ### Plot seasonality -> Eher weg
 
 # %%
 plot_seasonality(pre_corona);
-
-# %%
-from statsmodels.tsa.ar_model import AutoReg
-model = AutoReg(
-    pre_corona.to_numpy(), lags = [1], seasonal=False, 
-    exog=dummy_is.to_numpy()
-)
-# res = model.fit()
-model = model.fit() # need to assign this! because it returns an result instance and only this can use predict without providing the params
-# model.__class__ = res
-
-# %%
-from pandas.tseries.offsets import DateOffset
-
-forecast_period = 10*30  # 300
-forecast_period = 300
-ts = pre_corona
-ub = pd.date_range(start=ts.index[-1], periods=forecast_period, freq="MS")[-1]
-dummy_oos = dummy.get(lb=ts.index[-1] + pd.DateOffset(months=1), ub=ts.index[-1] + pd.DateOffset(months=forecast_period))
-
-
-
-# %%
-forecast_values = model.predict(start=0, end=len(ts) + forecast_period - 1, dynamic=False, 
-                                exog=dummy_is.to_numpy(), exog_oos=dummy_oos.to_numpy()
-                               )
-index = pd.date_range(start=pre_corona.index[0], periods=len(forecast_values), freq='MS')
-forecast = pd.Series(forecast_values, index=index)
-forecast_is = forecast.loc[:ts.index[-1]]
-forecast_oos = forecast.loc[ts.index[-1] + pd.DateOffset(months=1):]
-forecast
-plot_ts(forecast_is)
-
-# %%
-forecast_values = model.predict(start=0, end=len(ts) + forecast_period - 1, dynamic=False, 
-                                exog=dummy_is.to_numpy(), exog_oos=dummy_oos.to_numpy()
-                               )
-index = pd.date_range(start=pre_corona.index[0], periods=len(forecast_values), freq='MS')
-forecast = pd.Series(forecast_values, index=index)
-forecast_is = forecast.loc[:ts.index[-1]]
-forecast_oos = forecast.loc[ts.index[-1] + pd.DateOffset(months=1):]
-forecast
-plot_ts(forecast)
-
-# %% hide_input=false
-forecast_is
-
-
-# %%
-
-# %%
-
-# %% hide_input=false slideshow={"slide_type": "slide"}
-def plot_is_oos_pred(is_pred, oos_pred):
-    ...
-import pandas as pd
-
-ts = y
-
-forecast = ar.oos_forecast(300)
-
-forecast_is = forecast.loc[:ts.index[-1]]
-forecast_oos = forecast.loc[ts.index[-1] + pd.DateOffset(months=1):]
-
-import matplotlib.pyplot as plt
-
-# Create the plot
-plt.figure(figsize=(12, 6))  # Optional: Set the figure size
-
-# plt.plot(ts.index, ts, color='gray', label='Data')
-
-# plt.plot(ts.index, ts, color='black', marker='x', linestyle="", label='Data')
-
-plt.plot(ts.index, ts, color='blue', linestyle='-', label='Data')
-
-# Add a vertical line at x-coordinate 5
-plt.axvline(x=ts.index[-1], color='gray', linestyle='--', label='In-sample Ende')
-
-# Plot the first vector as a blue solid line
-plt.plot(forecast_is.index, forecast_is, color='green', linestyle='-', label='In-sample one-step ahead forecast')
-
-forecast_oos_ = pd.concat([forecast_is.tail(1), forecast_oos])
-
-# Plot the second vector as a red dotted line
-plt.plot(forecast_oos_.index, forecast_oos_, color='red', linestyle='--', label='Out-of-sample multi-step ahead forecast')
-
-
-# Add labels and a legend
-plt.xlabel('Jahre')
-plt.ylabel('Inflationsrate')
-plt.title('Vergleich von in-sample und out-of-sample Vorhersagen')
-
-plt.legend()
-
-plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
-
-# Ensure there is enough space on the right for the legend
-# plt.tight_layout()
-
-# plt.grid(linewidth=0.2)
-
-
-
-# Show the plot
-plt.grid(True, linewidth=0.5) 
-
-
-# %%
-def plot_is_oos_pred(is_pred, oos_pred):
-    ...
-import pandas as pd
-
-ts = y
-
-forecast = ar.oos_forecast(300)
-
-forecast_is = forecast.loc[:ts.index[-1]]
-forecast_oos = forecast.loc[ts.index[-1] + pd.DateOffset(months=1):]
-
-import matplotlib.pyplot as plt
-
-# Create the plot
-plt.figure(figsize=(12, 6))  # Optional: Set the figure size
-
-# plt.plot(ts.index, ts, color='gray', label='Data')
-
-# plt.plot(ts.index, ts, color='black', marker='x', linestyle="", label='Data')
-
-plt.plot(ts.index, ts, color='blue', linestyle='-', label='Data')
-
-# Add a vertical line at x-coordinate 5
-plt.axvline(x=ts.index[-1], color='gray', linestyle='--', label='In-sample Ende')
-
-# Plot the first vector as a blue solid line
-plt.plot(forecast_is.index, forecast_is, color='green', linestyle='-', label='In-sample one-step ahead forecast')
-
-forecast_oos_ = pd.concat([forecast_is.tail(1), forecast_oos])
-
-# Plot the second vector as a red dotted line
-plt.plot(forecast_oos_.index, forecast_oos_, color='red', linestyle='--', label='Out-of-sample multi-step ahead forecast')
-
-
-# Add labels and a legend
-plt.xlabel('Jahre')
-plt.ylabel('Inflationsrate')
-plt.title('Vergleich von in-sample und out-of-sample Vorhersagen')
-
-plt.legend()
-
-plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
-
-# Ensure there is enough space on the right for the legend
-# plt.tight_layout()
-
-# plt.grid(linewidth=0.2)
-
-
-
-# Show the plot
-plt.grid(True, linewidth=0.5) 
-
-# %% slideshow={"slide_type": "slide"}
-vars(model)
-vars(model._results)
-
-# %%
-# mean
-0.137/(1-0.9)
-
-# %%
-vars(model)
-vars(model._results)
-
-# %%
-# mean
-0.051/(1-0.98)
-
-# %%
-import pandas as pd
-plot_ts(forecast)
-
-# %%
-import pandas as pd
-plot_ts(forecast)
-
-# %% slideshow={"slide_type": "notes"}
-Note: The mean is higher
-
-# %%
-Uses the first AR(1) and then do the predictions -> Add a Corona Dummy
-
-# %%
-model.plot_predict?
 
 # %% [markdown] slideshow={"slide_type": "slide"}
 # # Literatur

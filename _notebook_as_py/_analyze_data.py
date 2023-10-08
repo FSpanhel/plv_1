@@ -116,6 +116,241 @@ fig = sm.graphics.tsa.month_plot(dta)
 # %% [markdown]
 # # Zusammenhang Prozess und Daten
 
+# %% slideshow={"slide_type": "slide"}
+import numpy as np
+
+# Activate the widget based backend.
+%matplotlib ipympl
+
+x = np.linspace(-10, 10, num=1000)
+fig, ax = plt.subplots()
+ax.grid()
+ax.set_ylim(-5, 5)
+# Initialize a plot object with y = x. We'll be modifying y below.
+# This returns a list of `.Line2D` representing the plotted data. We grab the first one -- we only have 1 series.
+line = ax.plot(x, x)[0]
+
+@interact(m=(-2.0, 2.0), b=(-3, 3, 0.5))
+def update_line(m=1, b=0.5):
+    line.set_ydata(m * x + b)
+    # Request a widget redraw.
+    fig.canvas.draw_idle()
+
+
+# %% slideshow={"slide_type": "slide"}
+%matplotlib inline
+
+import matplotlib.pyplot as plt
+from ipywidgets import interact
+
+# plt.close("all")
+def plot_graph(n):
+    plt.plot(range(n))
+    plt.show()
+
+plot_graph(10)
+
+# %% slideshow={"slide_type": "slide"}
+interact(plot_graph, n=(2,30))
+
+# %% slideshow={"slide_type": "-"}
+1
+
+# %% slideshow={"slide_type": "slide"}
+from scipy.stats import norm
+from matplotlib.ticker import MaxNLocator
+from matplotlib.ticker import MultipleLocator
+
+class DataVsProcess:
+
+    def get_data(self):
+        a = 0.5
+        mu = 8
+        self.n = 10
+        r = 4
+
+        # times series
+        x = range(1, n + 1)
+        # add burnin because Y_0 is not drawn from the stationary distribution
+        y = arma_generate_sample([1, -a], [1], (n, r), scale=np.sqrt((1-a**2)), burnin=1000)
+        y = y + mu
+
+        # normal density
+        sigma = 1
+        alpha = 0.001
+        quantile = norm.ppf([alpha, 1-alpha], loc=mu, scale=sigma)
+        x_norm = np.linspace(*quantile, 100)
+        y_norm = norm.pdf(x_norm, mu, sigma)
+        
+        data = {
+            "x": x,
+            "y": y,
+            "quantile": quantile,
+            "x_norm": x_norm,
+            "y_norm": y_norm
+        }
+        
+        return data
+        
+        
+    def setup_ax(self, ax, xlim, ylim):
+        ax.set_xlim(*xlim)
+        ax.set_ylim(*ylim)
+        ax.set_xlabel("t")
+        ax.set_ylabel("Realisierungen")
+        ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+        ax.xaxis.set_major_locator(MultipleLocator(1))
+        # ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+        ax.grid(True, axis='x', linestyle='--', which='major')
+        ax.xaxis.set_major_locator(plt.MultipleLocator(1))
+        # return fig, ax
+        
+        
+    def plot(self, figsize=(12, 6)):
+        data = self.get_data()
+        fig, ax = plt.subplots(figsize=figsize)
+        # fig, ax = self.setup_ax(figsize, xlim=[0, self.n+1], ylim=data["quantile"])
+
+        line = {}
+        color = {0: '#bcbd22', 1: '#17becf', 2: '#1f77b4', 3: '#ff7f0e'}
+            
+        button = ipywidgets.ToggleButtons(
+            options=['Daten', 'Zufallsvariablen', 'Mögliche Daten', 'Mögliche Trajektorien', 'Daten Trajektorie'],
+            description=' ',
+            disabled=False,
+            button_style='info', # 'success', 'info', 'warning', 'danger' or ''
+            tooltip='',
+            icon='check'
+        )
+        
+        watcher = {}
+        
+        sim_data = ipywidgets.ToggleButton(
+            value=False,
+            description='Simuliere Daten',
+            disabled=False,
+            button_style='info', # 'success', 'info', 'warning', 'danger' or ''
+            tooltip='Description',
+            icon='check'
+        )
+
+        
+        @interact(button=button, sim_data=sim_data)
+        def update(button, sim_data):
+            #ax.clear()
+            # print(button)
+            # print(sim_data)
+            if button in ["Daten", "Daten Trajektorie"]:
+                ax.clear()
+            
+            self.setup_ax(ax, xlim=[0, self.n+1], ylim=data["quantile"])
+
+            # ax.set_ylim(*data["quantile"])
+            # ax.set_xlim(0, self.n+1)
+            line[0],  = ax.plot(data["x"], data["y"][:, 0], linestyle="", marker="x", color=color[0])
+            # print(button)
+
+            if button == "Zufallsvariablen":
+                for t in range(n):
+                    if t == 0:
+                        ax.plot(data["y_norm"] + t + 1, data["x_norm"], color='gray', linestyle='--', label='N(0, 1)')
+                    else:
+                        ax.plot(data["y_norm"] + t + 1, data["x_norm"], color='gray', linestyle='--')
+                ax.legend(loc='upper left') 
+            elif button == "Mögliche Daten":
+                for t in range(r):
+                    line[t],  = ax.plot(data["x"], data["y"][:, t], linestyle="", marker="x", color=color[t])               
+            elif button == "Mögliche Trajektorien":
+                for t in range(r):
+                    line[t],  = ax.plot(data["x"], data["y"][:, t], linestyle="--", marker="x", color=color[t])
+            elif button == "Daten Trajektorie":
+                line[0],  = ax.plot(data["x"], data["y"][:, 0], linestyle="--", marker="x", color=color[0])
+                
+            fig.canvas.draw_idle()
+            return
+        
+    
+
+# %%
+a = DataVsProcess()
+plt.close("all")
+a.plot(figsize=(12, 6))
+
+# %%
+# import ipywidget
+widget = ipywidgets.ToggleButtons(
+    options=['Daten', 'Zufallsvariablen', 'Mögliche Daten', 'Mögliche Trajektorien', 'Daten Trajektorie'],
+    description='A',
+    disabled=False,
+    button_style='info', # 'success', 'info', 'warning', 'danger' or ''
+    tooltip='A',
+#     icon='check'
+)
+
+
+
+from IPython.display import display
+
+display(widget)
+
+# %%
+color
+
+# %%
+plt.close("all")
+a = 0.5
+mu = 8
+n = 10
+r = 4
+y = arma_generate_sample([1, -a], [1], (n, r), scale=np.sqrt((1-a**2)), burnin=1000)
+y = y + mu
+x = range(1, n + 1)
+print(y.shape)
+
+from matplotlib.ticker import MaxNLocator
+fig, ax = plt.subplots()
+
+ax.plot(x, y, linestyle="", marker="x")
+
+line = {}
+color = {}
+for t in range(r):
+    line[t],  = ax.plot([], []) # , linestyle="", marker="x")
+for t in range(r):
+    line[t],  = ax.plot(x, y[:, t], linestyle="", marker="x")
+    color[t] = line[t].get_color()
+    # line[t].plot(x, y[:, t], linestyle="-", marker="x")
+    
+# ax.plot(x, y, linestyle="-", marker="x", alpha=0.8)
+ax.set_xlim(0, n + 1)
+ax.set_xlabel("t")
+ax.set_ylabel("Realisierungen")
+ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+
+# %%
+for t in range(r):
+    line[t],  = ax.plot(x, y[:, t], linestyle="--", marker="x", color=line[t].get_color())
+
+# %%
+y.var(axis=1)
+
+# %%
+from scipy.stats import norm
+sigma = 1
+alpha = 0.001
+
+# Compute the 1% quantile using the percent point function (ppf)
+# The argument to ppf represents the desired percentile (1% in this case)
+quantile = norm.ppf([alpha, 1-alpha], loc=mu, scale=sigma)
+x_norm = np.linspace(*quantile, 100)
+y_norm = norm.pdf(x_norm, mu, sigma)
+quantile
+
+# %%
+ax.set_ylim(*quantile)
+for t in x:
+    ax.plot(y_norm + t, x_norm, color='gray', linestyle='--', label='N(0, 1)')
+
 # %%
 import matplotlib.pyplot as plt
 
@@ -158,14 +393,428 @@ import matplotlib.pyplot as plt
 
 plt.plot(arma_generate_sample([1, -1], [1], 1000000))
 
+# %% [markdown]
+# ## Using a plt
+
 # %%
-n = int(1e4)
-n = 10
-r = 2
-plt.plot(arma_generate_sample([1, -0.9], [1], (n, r)));
+
+import ipywidgets
+from ipywidgets import interact
+
+class A:
+    def __init__(self, figsize=(12,6)):
+        self.figsize = figsize
+    
+    def setup_plt(self, figsize):
+        plt.figure(figsize=figsize)
+        plt.xlabel('t')
+        plt.ylabel('Realisierung')
+        plt.title(f'{n} Realisierungen eines AR(1) Prozesses')
+        return plt
+
+    def plot_initial_lines(self, plt) -> dict:
+        line = {}
+        # import pdb; pdb.set_trace()
+        #line["realization"],  = 
+        plt.plot([], [])
+        return line
+
+    def plot(self):
+
+        plt = self.setup_plt(figsize=self.figsize)
+        self.plot_initial_lines(plt)
+        
+        widget = {}
+        widget["c"] = ipywidgets.FloatSlider(
+            value=0,
+            min=0,
+            max=4,
+            step=0.5,
+            description='c'
+        )
+        widget["a"] = ipywidgets.FloatSlider(
+            value=0,
+            min=-1.1,
+            max=1.1,
+            step=0.1,
+            description='a'
+        )
+        widget["r"] = ipywidgets.IntSlider(value=1, min=1, max=1000, step=50)
+        widget["n"] = ipywidgets.IntSlider(min=100, max=1000, step=100)
+
+        @interact(c=widget["c"], a=widget["a"], r=widget["r"], n=widget["n"])
+        def update(c, a, r, n):
+            self.update_plot(plt, c, a, r, n)
+
+    def update_plot(
+        self, plt, c: float, a: float, r: int, n: int
+    ):
+        y = arma_generate_sample([1, -a], [1], (n, r))
+
+        # add intercept
+        exponents = np.arange(0, n)
+        power_series = c * np.power(a, exponents)
+        intercept = power_series.cumsum().reshape(n, 1)
+
+        y = y + intercept
+
+        # cannot use line["realization"].set_data(y)
+        plt.clf()
+        plt.plot(y)
+
+        # plt.canvas.draw_idle()
+
 
 # %% [markdown]
-# ## Manual
+# ## only y
+
+# %%
+import ipywidgets
+from ipywidgets import interact
+
+class A:
+    def __init__(self, figsize=(12,6)):
+        self.figsize = figsize
+        
+    def setup_ax(self, figsize):
+        fig, ax = plt.subplots(figsize=figsize)
+        # fig.suptitle('rrr')
+        # ax.set_ylim(*ylim)
+        fig.subplots_adjust(
+            left=0.05, 
+            # right=0.9, 
+            top=0.95, 
+            # bottom=0.1
+        )
+        ax.set_xlabel('t')
+        ax.set_ylabel('Realisierung')
+        ax.set_title(f'{n} Realisierungen eines AR(1) Prozesses')
+        return fig, ax
+
+    def plot(self):
+
+        fig, ax = self.setup_ax(figsize=self.figsize)
+
+        widget = {}
+        widget["c"] = ipywidgets.FloatSlider(
+            value=0,
+            min=0,
+            max=4,
+            step=0.5,
+            description='c'
+        )
+        widget["a"] = ipywidgets.FloatSlider(
+            value=0,
+            min=-1.1,
+            max=1.1,
+            step=0.1,
+            description='a'
+        )
+        widget["r"] = ipywidgets.IntSlider(value=1, min=1, max=1000, step=50)
+        widget["n"] = ipywidgets.IntSlider(min=100, max=1000, step=100)
+
+        @interact(c=widget["c"], a=widget["a"], r=widget["r"], n=widget["n"])
+        def update(c, a, r, n):
+            self.update_plot(fig, ax, c, a, r, n)
+
+    def update_plot(
+        self, fig, ax, c: float, a: float, r: int, n: int
+    ):
+        y = arma_generate_sample([1, -a], [1], (n, r))
+
+        # add intercept
+        exponents = np.arange(0, n)
+        power_series = c * np.power(a, exponents)
+        intercept = power_series.cumsum().reshape(n, 1)
+
+        y = y + intercept
+
+        # cannot use line["realization"].set_data(y) if y is a matrix
+        ax.clear()
+        ax.plot(y, alpha=0.5)
+        ax.set_xlabel('t')
+        ax.set_ylabel('Realisierung')
+        ax.set_title(f'{n} Realisierungen eines AR(1) Prozesses')
+
+        fig.canvas.draw_idle()
+
+
+# %% [markdown]
+# ## with mean and var
+
+# %%
+import matplotlib.gridspec as gridspec
+
+class A:
+    def __init__(self, figsize=(12,6), plot_mean_var: bool = False):
+        self.figsize = figsize
+        self.plot_mean_var = plot_mean_var
+        
+    def setup_ax(self, figsize):
+        fig  = plt.figure(figsize=figsize)
+        ax = {}
+        if not self.plot_mean_var:
+            ax["y"] = plt.subplot()
+        
+        # Create 2x2 sub plots
+        else:
+            gs = gridspec.GridSpec(2, 3, width_ratios=[4, 1, 1])
+            
+
+            ax["y"] = plt.subplot(gs[:, :2]) # row 1, span all columns
+            ax["mean"] = plt.subplot(gs[0, 2]) # row 0, col 0
+            ax["var"] = plt.subplot(gs[1, 2]) # row 0, col 1
+
+            if False:
+                ax["y"] = plt.subplot(2, 2, (1, 2))
+                ax["mean"] = plt.subplot(2, 2, 3)  
+                ax["var"] = plt.subplot(2, 2, 4)
+            plt.subplots_adjust(hspace=0.5)
+        # fig.suptitle('rrr')
+        # ax.set_ylim(*ylim)
+        fig.subplots_adjust(
+            left=0.05, 
+            # right=0.9, 
+            top=0.95, 
+            # bottom=0.1
+        )
+        return fig, ax
+
+    def plot(self):
+
+        fig, ax = self.setup_ax(figsize=self.figsize)
+
+        widget = {}
+        widget["c"] = ipywidgets.FloatSlider(
+            value=0,
+            min=0,
+            max=4,
+            step=0.5,
+            description='c'
+        )
+        widget["a"] = ipywidgets.FloatSlider(
+            value=0,
+            min=-1.1,
+            max=1.1,
+            step=0.1,
+            description='a'
+        )
+        widget["r"] = ipywidgets.IntSlider(value=1, min=1, max=1001, step=50)
+        widget["n"] = ipywidgets.IntSlider(min=100, max=1000, step=100)
+
+        @interact(c=widget["c"], a=widget["a"], r=widget["r"], n=widget["n"])
+        def update(c, a, r, n):
+            self.update_plot(fig, ax, c, a, r, n)
+
+    def update_plot(
+        self, fig, ax, c: float, a: float, r: int, n: int
+    ):
+        y = arma_generate_sample([1, -a], [1], (n, r))
+
+        # add intercept
+        exponents = np.arange(0, n)
+        power_series = c * np.power(a, exponents)
+        intercept = power_series.cumsum().reshape(n, 1)
+
+        y = y + intercept
+        
+        # cannot use line["realization"].set_data(y) if y is a matrix
+        ax["y"].clear()
+        ax["y"].plot(y, alpha=0.5)
+        ax["y"].set_xlabel('t')
+        ax["y"].set_ylabel('Realisierung')
+        ax["y"].set_title(f'{n} Realisierungen eines AR(1) Prozesses')
+
+        if self.plot_mean_var:
+            mean = y.mean(axis=1) # .round(2)
+            var = y.var(axis=1) # .round(2)
+            ax["mean"].clear()
+            ax["mean"].plot(mean)
+            ax["mean"].set_ylim(y.min(), y.max())
+            ax["mean"].set_title("Mittelwert")
+            ax["mean"].set_xlabel("t")
+            
+            ax["var"].clear()
+            ax["var"].plot(var)
+            ax["var"].set_ylim(y.min(), max(y.max(), var.max()))
+            ax["var"].set_title("Varianz")
+            ax["var"].set_xlabel("t")
+            # import pdb; pdb.set_trace()
+
+        fig.canvas.draw_idle()
+
+# %% slideshow={"slide_type": "slide"}
+a = A(figsize=(12, 6))
+
+
+# %% slideshow={"slide_type": "slide"} hide_input=false
+from IPython.display import display, HTML
+display(HTML("<style>.container { width:95% !important; }</style>"))
+
+%matplotlib ipympl 
+a = A(figsize=(14, 5), plot_mean_var=False)
+a.plot()
+
+# %%
+a = A(figsize=(14, 5), plot_mean_var=True)
+
+# %% slideshow={"slide_type": "slide"}
+a.plot()
+
+# %% slideshow={"slide_type": "slide"}
+plt.subplot?
+
+# %% slideshow={"slide_type": "slide"}
+n = int(1e4)
+n = 1000
+r = 100
+a = 1.01  # Common ratio of the geometric series  # larger > 1 not allowed because of overflow: <= 1.01
+a = 1
+c = 0
+y = arma_generate_sample([1, -a], [1], (n, r))
+
+
+
+
+# print("ha", c / (1-a))
+
+# Generate the geometric series
+if False:
+    geometric_series = c * np.geomspace(first_term, first_term * a**(n-1), n)
+
+    exponents = np.arange(0, n)  # For example, generates exponents from 0 to 5
+    intercept = geometric_series.cumsum().reshape(n, 1)
+
+# Generate the power series using numpy.power
+exponents = np.arange(0, n)
+power_series = c * np.power(a, exponents)
+intercept = power_series.cumsum().reshape(n, 1)
+
+y = y + intercept
+
+# Create a figure
+fig = plt.figure()
+
+# Create subplots using plt.subplot()
+if True:
+    ax1 = plt.subplot(2, 2, (1, 2))  # 2 rows, 2 columns, subplot 1
+    ax2 = plt.subplot(2, 2, 3)  
+    ax3 = plt.subplot(2, 2, 4)
+else:
+    ax1 = plt.subplot(3, 3, (2, 1))  # 2 rows, 2 columns, subplot 1
+    # ax2 = plt.subplot(2, 3, (1, 3))  
+    # ax3 = plt.subplot(2, 3, (2, 3))
+plt.subplots_adjust(hspace=0.5)
+plt.subplots_adjust(
+            left=0.05, 
+            # right=0.9, 
+            top=0.95, 
+            # bottom=0.1
+        )
+
+
+# plt.rcParams['font.family'] = 'serif' 
+ax1.plot(y, alpha=0.4);
+ax1.set_title(f'{n} Realisierungen eines AR(1) Prozesses')
+
+# %%
+gs
+
+# %% [markdown]
+# ### three plots above each other
+
+# %% slideshow={"slide_type": "slide"} code_folding=[]
+if True:
+    import matplotlib.pyplot as plt
+    import matplotlib.gridspec as gridspec
+
+    # Create a figure with a 3x1 grid
+    fig = plt.figure(figsize=(12, 6))
+    gs = gridspec.GridSpec(3, 1, height_ratios=[3, 1, 1])
+
+    # Create the larger plot at the top
+    ax1 = plt.subplot(gs[0])
+    ax1.plot(y, alpha=0.4);
+    ax1.set_title('Larger Plot')
+
+    # Create the middle plot
+    ax2 = plt.subplot(gs[1])
+    ax2.scatter([1, 2, 3, 4], [2, 4, 6, 8])
+    ax2.set_title('Middle Plot')
+
+    # Create the smaller plot at the bottom
+    ax3 = plt.subplot(gs[2])
+    ax3.bar(['A', 'B', 'C', 'D'], [10, 20, 15, 30])
+    ax3.set_title('Smaller Plot')
+
+    # Adjust layout to prevent overlapping titles
+    plt.tight_layout()
+
+    # Display the figure with subplots
+    plt.show()
+
+
+# %% [markdown]
+# ### two plots side by side
+
+# %%
+gridspec.GridSpec?
+
+# %%
+import numpy as np
+import matplotlib.pylab as pl
+import matplotlib.gridspec as gridspec
+
+# Create 2x2 sub plots
+gs = gridspec.GridSpec(2, 3, width_ratios=[4, 1, 1])
+
+pl.figure(figsize=(12, 6))
+ax = pl.subplot(gs[0, 2]) # row 0, col 0
+pl.plot([0,1])
+
+ax = pl.subplot(gs[1, 2]) # row 0, col 1
+pl.plot([0,1])
+
+ax = pl.subplot(gs[:, :2]) # row 1, span all columns
+pl.plot([0,1])
+
+# %% slideshow={"slide_type": "slide"}
+mean = y.mean(axis=1) # .round(2)
+var = y.var(axis=1) # .round(2)
+ax2.plot(mean)
+ax2.set_ylim(y.min(), y.max())
+ax2.set_title("Mittelwert")
+ax2.set_xlabel("t")
+
+# %%
+ax3.plot(var)
+ax3.set_ylim(y.min(), max(y.max(), var.max()))
+ax3.set_title("Varianz")
+ax3.set_xlabel("t")
+
+# %%
+plt.plot(y.mean(axis=1), ylim=(-4, 4))
+
+# %% [markdown]
+# ## Manual -> obsolete
+
+# %%
+np.geomspace?
+
+# %%
+import numpy as np
+
+# Define the first term, common ratio, and number of elements
+first_term = 1  # First term of the series
+a = 0.5  # Common ratio of the geometric series
+n = 5  # Number of elements in the series
+
+# Generate the geometric series
+geometric_series = np.geomspace(first_term, first_term * a**(n-1), n)
+
+# Print the resulting array
+print(geometric_series)
+
 
 # %%
 a = 0.9
@@ -682,7 +1331,7 @@ def on_slider_change(change):
 slider.observe(on_slider_change, names='value')
 
 # %% [markdown]
-# # Test
+# # Interactive Plot für die Anwendung
 
 # %%
 from IPython.display import display, HTML
