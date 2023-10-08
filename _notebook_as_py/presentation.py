@@ -139,13 +139,14 @@ plot_inflation(inflation, figsize=(16, 6))
 # %% [markdown] slideshow={"slide_type": "slide"}
 # **Was ist eine Zeitreihe?**
 #
-# Im Folgenden, sei $T \subset \mathbb{T} \subset \mathbb{R}$.
+# Im Folgenden, sei $T \subset \mathbb{T}$ eine abzählbare Teilmenge von $\mathbb{R}$.
 #
 # Wenn wir von einer (diskreten) Zeitreihe sprechen, können damit zwei verschiedene Begriffe gemeint sein:
 # 1. Eine Zeitreihe ist eine Abfolge von Daten $(y_t)_{t=1,...,T}$, die in zeitlicher Reihenfolge angeordnet sind.
 # 2. Eine Zeitreihe ist ein stochastischer Prozess $(Y_t)_{t\in \mathbb{T}}$, d.h., ein Folge von Zufallsvariablen mit einem Index $t$, der für Zeitpunkte steht.
 #
-# **Die Verbindung zwischen 1. und 2. ergibt sich dadurch, dass Daten $(y_t)_{t=1,...,T}$ in 1. als eine Stichprobe oder Realisierung eines zugrunde liegenden stochastischen Prozesses $(Y_t)_{t\in \mathbb{T}}$ in 2. aufgefasst werden.**
+# [geld und neue Slide]
+# **Die Verbindung zwischen 1. und 2. ergibt sich dadurch, dass Daten $(y_t)_{t=1,...,T}$ in 1. als eine Stichprobe eines zugrunde liegenden stochastischen Prozesses $(Y_t)_{t\in \mathbb{T}}$ in 2. aufgefasst werden.**
 #
 #
 
@@ -159,6 +160,7 @@ plot_inflation(inflation, figsize=(16, 6))
 %matplotlib widget
 from plv.plot import DataVsProcess
 DataVsProcess().plot(figsize=(14, 5))
+# Seed setzen
 
 # %% [markdown] slideshow={"slide_type": "skip"}
 # ## Annahmen an einen Zeitreihenprozess für die statistische Inferenz und Modellierung
@@ -185,7 +187,8 @@ DataVsProcess().plot(figsize=(14, 5))
 # - Neben Ergodizität ist Stationarität eine bedeutende Eigenschaft eines stochastischen Prozesses.
 # <!-- - Es gibt zwei Definition von Stationarität, die Klasse der stochastischen Prozess einschränken.
 # -->
-# - Wir konzentieren uns hier auf die sogenannte **schwache Stationarität**.
+# - Wir konzentieren uns hier auf die sogenannte **schwache Stationarität**. [Mit obigen Satz mergen]
+# -> new slide
 #
 # <blockquote style="width: auto; background-color: 
 #                    lightyellow; color: black; 
@@ -261,7 +264,7 @@ DataVsProcess().plot(figsize=(14, 5))
 #
 # 1. $E[U_t] = 0$
 # 2. $Var[U_t] = \sigma^2_U \in \mathbb{R}$
-# 3. $Cov[Y_t, Y_h] = 0$
+# 3. $Cov[U_t, U_h] = 0$
 # </blockquote>
 
 # %% [markdown] slideshow={"slide_type": "slide"}
@@ -311,12 +314,13 @@ import matplotlib.pyplot as plt
 
 T = 1000
 (c, a) = (2, 0.5)
-u = np.random.normal(0, 1, T + 1)
-y = np.zeros(T, float)
+u = np.random.normal(0, 1, T + 1)  # ohne  0 , 1?
+y = np.zeros(T, float)  # ohne float?
 for t in range(1, T):
-    y[t] = c + a * y[t-1] + u[t]
+    y[t] = c + a * y[t-1] + u[t] 
     
-plt.close("all")
+plt.close("all")  # plot weg
+y 
 
 
 # %% slideshow={"slide_type": "fragment"} cell_style="split"
@@ -328,7 +332,7 @@ plt.plot(y);
 
 # %% slideshow={"slide_type": "slide"}
 from plv.plot import SimAR
-SimAR().plot(plot_mean_var=True, figsize=(16, 6))
+SimAR().plot(figsize=(16, 6), plot_mean_var=True)  # n zuerst dann r
 
 # %% [markdown] slideshow={"slide_type": "skip"}
 # ## Skizze des Beweis für die schwache Stationarität des AR(1) Prozesses
@@ -520,7 +524,8 @@ from plv.plot import plot_ts, plot_seasonality, plot_is_oos_forecast, Interactiv
 
 inflation = load_verbraucherpreisindex(filter_columns=["inflation"])
 
-# %%
+# %% slideshow={"slide_type": "slide"}
+# direkt der plot
 from plv.model import AR1
 
 ar1 = AR1()
@@ -531,8 +536,8 @@ ar1 = AR1()
 # %%
 # inflation.forecast_plot(ar1)
 
-# %%
-a = InteractiveForecastPlot(ar1, inflation) # , dummy=None) # , figsize=(13, 5.5), ylim=(-1, 8.5))
+# %% slideshow={"slide_type": "slide"}
+a = InteractiveForecastPlot(ar1, inflation, dummy=dummy) # , dummy=None) # , figsize=(13, 5.5), ylim=(-1, 8.5))
 a.plot()
 
 # %% [markdown]
