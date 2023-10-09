@@ -10,9 +10,15 @@ from statsmodels.tsa.arima_process import arma_generate_sample
 from scipy.stats import norm
 from matplotlib.ticker import MaxNLocator
 from matplotlib.ticker import MultipleLocator
+import matplotlib.patches as patches
+import matplotlib.dates as mdates
 
 from plv.model import AR1, CrisisDummy
-from plv.data import corona_begin
+from plv.data import corona_begin, max_inflation, load_verbraucherpreisindex
+
+
+inflation = load_verbraucherpreisindex(filter_columns=["inflation"])
+crisis_dummy = CrisisDummy()
 
 
 def plot_ts(
@@ -52,6 +58,18 @@ def plot_inflation(inflation: pd.Series, figsize=(16, 4)):
     )
     plt.legend()
     # https://www-genesis.destatis.de/genesis/online?sequenz=tabelleErgebnis&selectionname=61111-0002&startjahr=1996#abreadcrumb
+
+
+def forecast_inflation(figsize = (12, 6), dummy: bool = False):
+    ar1 = AR1()
+    if dummy:
+        _dummy = crisis_dummy
+    else:
+        _dummy = None
+    return InteractiveForecastPlotNew(
+        ar1, inflation, figsize=figsize, dummy=_dummy
+    ).plot()
+
 
 class InteractiveForecastPlot:
     def get_data(self, forecast_origin, dummy=False) -> dict:
@@ -239,7 +257,9 @@ class InteractiveForecastPlotNew:
     def get_data(self, forecast_origin, dummy=False) -> dict:
         data = {}
         data["in_sample"] = self.y.loc[:forecast_origin].copy()  # this is ts
-        data["out_of_sample"] = self.y.loc[:forecast_origin].copy() 
+        data["out_of_sample"] = self.y.loc[forecast_origin:].copy() 
+        data["in_sample_2"] = data["in_sample"]
+        data["out_of_sample_2"] = data["out_of_sample"]
         # Fitting is very fast
         if not dummy:
             self.ar.fit(data["in_sample"])
@@ -275,12 +295,31 @@ class InteractiveForecastPlotNew:
     
     def setup_ax(self, figsize, ylim):
         fig, ax = plt.subplots(figsize=figsize)
+        fig.subplots_adjust(
+            left=0.05, 
+            # right=0.9, 
+            top=0.95, 
+            # bottom=0.1
+        )
         ax.set_ylim(*ylim)
         ax.set_xlim(self.y.index[0], pd.Timestamp("2049-12-01"))
         # Add labels and a legend
         ax.set_xlabel('Jahre')
         ax.set_ylabel('Inflationsrate')
-        ax.set_title('Vergleich von in-sample und out-of-sample Vorhersagen')
+        ax.set_title('Out-of-sample Mehrschritt-Vorhersagen des AR(1) Modells')
+
+        xticks = pd.date_range(
+            self.y.index[0], pd.Timestamp("2049-12-01"), freq="MS"
+        )
+
+        cycle = 24
+        ax.set_xticks(xticks[::cycle], xticks.strftime('%Y')[::cycle], rotation=45)
+        # ax.set_yticks(y.index[::12], y.index.strftime('%Y')[::12], rotation=45); 
+        
+        y_ticks = {}
+        y_ticks["key"] = range(int(np.floor(ylim[0])), int(np.ceil(ylim[1])) + 1)
+        y_ticks["value"] = [f"{y}%" for y in y_ticks["key"]]
+        ax.set_yticks(y_ticks["key"], y_ticks["value"])
     
         return fig, ax
     
@@ -289,8 +328,18 @@ class InteractiveForecastPlotNew:
 
         # Plot
         line["in_sample"], = ax.plot(data["in_sample"].index, data["in_sample"],
-                                     label="Daten", 
-                                     marker="x", markersize=2,
+                                     label="In-sample Daten", 
+                                     marker="x",
+                                     linestyle=" ",
+                                     color="#1f77b4"
+                                     )
+        
+        line["in_sample_2"], = ax.plot(data["in_sample"].index, data["in_sample"],
+                                     # label="In-sample Daten", 
+                                     # marker="x",
+                                     linestyle="-",
+                                     alpha=0.4,
+                                     color="#1f77b4"
                                      )
         # , linestyle="", marker="x")
 
@@ -299,28 +348,55 @@ class InteractiveForecastPlotNew:
             color="black", linestyle='-',
             label='In-sample Ende'
         )
+
+        line["out_of_sample"], = ax.plot([], [],
+                                     linestyle=" ",
+                                     marker="x",
+                                     color="gray",
+                                     alpha=0.3,
+                                     label="Out-of-sample Daten"
+                                     )
+
+        line["out_of_sample_2"], = ax.plot(
+            [], [], linestyle="-", color="gray", alpha=0.2)
         
 
-        line["in_sample_forecast"], = ax.plot(
-            data["in_sample_forecast"].index, data["in_sample_forecast"],
-            color=(0, 1, 0), linestyle='-',
-            label='In-sample Einschritt-Prognose'
-        )
+        if False:
+            line["in_sample_forecast"], = ax.plot(
+                data["in_sample_forecast"].index, data["in_sample_forecast"],
+                color=(0, 1, 0), linestyle='-',
+                label='In-sample Einschritt-Prognose'
+            )
 
         line["oos_forecast"], = ax.plot(
-            data["oos_forecast"].index, data["oos_forecast"], color='red',
-            linestyle='--',
-            label='Out-of-sample Mehrschritt-Prognose'
+            [], [], color="#50C878",
+            linestyle='-',
+            label='Mehrschritt-Prognose'
         )
         
         line["corona_start"],  = ax.plot(
             data["corona_start"].index, data["corona_start"],
-            color="yellow", linestyle='--',
+            color="red", linestyle='--',
             label='Corona Start'
         )
 
         line["mean"], = ax.plot([], [], color='gray', linestyle='--',
                                 label="Erwartungswert des AR(1) Modells")
+        
+        if self.dummy:
+            box_start, box_end = mdates.date2num(
+                [pd.Timestamp(corona_begin), pd.Timestamp(max_inflation)]
+            )
+            width = box_end - box_start
+            height = self.ylim[1] - self.ylim[0]
+            rectangle = patches.Rectangle(
+                (box_start, self.ylim[0]),
+                width, 
+                height, 
+                linewidth=1, edgecolor='r', facecolor='red', alpha=0.05,
+                label="Dummy=1"
+            )
+            ax.add_patch(rectangle)
         
         return line
 
@@ -330,7 +406,7 @@ class InteractiveForecastPlotNew:
             y: pd.Series,
             dummy: None | CrisisDummy = None,
             forecast_horizon: int = 750,
-            initial_forecast_origin = "2005",
+            initial_forecast_origin = "2008",
             figsize = (12,6),
             ylim = (-3, 11)
             ):
@@ -370,8 +446,31 @@ class InteractiveForecastPlotNew:
             initial_year, initial_month = self.initial_forecast_origin, "01"
         initial_year, initial_month = int(initial_year), int(initial_month)
 
-        widget["year"] = ipywidgets.IntSlider(min=initial_year, max=2024, step=1)
-        widget["month"] =  ipywidgets.IntSlider(min=initial_month, max=12*4, step=1)
+        widget["year"] = ipywidgets.IntSlider(
+            min=initial_year, max=2024, step=1
+        )
+        widget["month"] =  ipywidgets.IntSlider(min=initial_month, max=5*20, step=1)
+
+
+        widget["plot_forecast"] = ipywidgets.Dropdown(
+            value=False,
+            description='Zeige Vorhersage',
+            options={'Ja': True, 'Nein': False},
+            # disabled=False,
+            # button_style='info', # 'success', 'info', 'warning', 'danger' or ''
+            # tooltip='Description',
+            # icon='check'
+        )
+
+        widget["plot_out_of_sample"] = ipywidgets.Dropdown(
+            value=False,
+            description='Zeige Out-of-sample Daten',
+            options={'Ja': True, 'Nein': False},
+            # disabled=False,
+            # button_style='info', # 'success', 'info', 'warning', 'danger' or ''
+            # tooltip='Description',
+            # icon='check'
+        )
 
         widget["mean"] = ipywidgets.Dropdown(
             options={'Ja': True, 'Nein': False},
@@ -380,28 +479,53 @@ class InteractiveForecastPlotNew:
         )
 
         if self.dummy is not None:
+            widget["plot_forecast"].value = True
+            widget["plot_out_of_sample"].value = True
+            widget["year"].value = 2019
+            widget["month"].value = 12
+            widget["mean"].value = True
             widget["dummy"] = ipywidgets.Dropdown(
                 options={'AR(1)': False, 'AR(1) mit Krisen Dummy': True},
-                value=False,
+                value=True,
                 description='Modell:',
             )
             @interact(
-                Jahr=widget["year"], Monat=widget["month"], dummy=widget["dummy"],
-                plot_mean=widget["mean"]
+                Jahr=widget["year"], Monat=widget["month"],
+                dummy=widget["dummy"],
+                plot_forecast=widget["plot_forecast"],
+                plot_out_of_sample=widget["plot_out_of_sample"],
+                plot_mean=widget["mean"],
             )
-            def update(Jahr: int, Monat: int, dummy: bool, plot_mean: bool):
-                self.update_plot(line, fig, Jahr, Monat, dummy, plot_mean)
+            def update(
+                Jahr: int, Monat: int, plot_forecast: bool,
+                dummy: bool, 
+                plot_out_of_sample: bool, plot_mean: bool
+            ):
+                self.update_plot(
+                    line, fig, Jahr, Monat, dummy, plot_mean, plot_out_of_sample,
+                    plot_forecast,
+                )
             
         else:
             @interact(
-                Jahr=widget["year"], Monat=widget["month"], plot_mean=widget["mean"]
+                Jahr=widget["year"], Monat=widget["month"],
+                plot_forecast=widget["plot_forecast"],
+                plot_out_of_sample=widget["plot_out_of_sample"],
+                plot_mean=widget["mean"],
             )
-            def update(Jahr: int, Monat: int, plot_mean: bool):
+            def update(
+                Jahr: int, Monat: int, plot_forecast: bool,
+                plot_out_of_sample: bool, plot_mean: bool
+                ):
                 dummy = False
-                self.update_plot(line, fig, Jahr, Monat, dummy, plot_mean)
+                self.update_plot(
+                    line, fig, Jahr, Monat, dummy, plot_mean, plot_out_of_sample,
+                    plot_forecast,
+                )
 
     def update_plot(
-            self, line, fig, Jahr: int, Monat: int, dummy: bool, plot_mean: bool
+            self, line, fig, Jahr: int, Monat: int, dummy: bool, plot_mean: bool,
+            plot_out_of_sample: bool, plot_forecast: bool
         ):
         forecast_origin = (
             pd.Timestamp(f"{Jahr}-01-01")
@@ -411,7 +535,17 @@ class InteractiveForecastPlotNew:
         for key in line.keys():
             if key == "mean":
                 if not plot_mean:
+                    line[key].set_data([], [])
                     continue
+            elif key.startswith("out_of_sample"):
+                if not plot_out_of_sample:
+                    line[key].set_data([], [])
+                    continue
+            elif key == "oos_forecast":
+                if not plot_forecast:
+                    line[key].set_data([], [])
+                    continue
+
             line[key].set_data(data[key].index, data[key])
             # if (key == "in_sample_forecast") 
             # and (forecast_origin == pd.Timestamp("2020-01-01")):

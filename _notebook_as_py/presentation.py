@@ -13,11 +13,11 @@
 #     name: python3
 # ---
 
-# %%
+# %% slideshow={"slide_type": "skip"}
 num_open_figures = len(plt.get_fignums())
 num_open_figures
 
-# %% slideshow={"slide_type": "slide"}
+# %% slideshow={"slide_type": "skip"}
 %matplotlib inline
 
 import matplotlib.pyplot as plt
@@ -31,16 +31,16 @@ def plot_graph(n):
 
 interact(plot_graph, n=(2,30))
 
-# %%
+# %% slideshow={"slide_type": "skip"}
 inflation.index.strftime('%Y')[::12].to_numpy().tolist()
 
-# %%
+# %% slideshow={"slide_type": "skip"}
 dates
 
-# %%
+# %% slideshow={"slide_type": "skip"}
 dates[::12].strftime("%Y")
 
-# %%
+# %% slideshow={"slide_type": "skip"}
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
@@ -65,14 +65,14 @@ plt.tight_layout()
 plt.show()
 
 
-# %%
+# %% slideshow={"slide_type": "skip"}
 y_ticks = {}
 y_ticks["key"] = range(1, 8)
 y_ticks["value"] = [f"{y}%" for y in y_ticks["key"]]
 y_ticks
 
 
-# %%
+# %% slideshow={"slide_type": "skip"}
 def plot_inf():
     import matplotlib as mpl
     figsize = (6, 4)
@@ -156,15 +156,17 @@ import numpy as np
 seed_value = 0; np.random.seed(seed_value);
 
 # %% [markdown] slideshow={"slide_type": "slide"}
-# - Die Vortragspräsentation ist als interaktive Rise Präsentation konzeptiert.
-# - Bitte öffnen sie folgende URL in ihrem Browser, um die interaktive Präsentation zu starten.
+# **Anmerkungen zur Bedienung der interaktiven Präsentation**
+#
+# - Die Vortragspräsentation ist als interaktive [Rise](https://rise.readthedocs.io/en/latest/) Präsentation konzeptiert.
+# - Um die interaktive Präsentation zu starten, öffnen Sie bitte folgende URL in ihrem Browser, 
 # <!-- oder scannen den QR Code -> kann ja das dann nicht bedienen? -->
 # - Es kann ein wenig dauern, bis die Präsentation gestartet wird. Notfalls laden Sie die Seite bitte neu.
 # - Die interaktive Präsentation kann wie folgt bedient werden:
 #     - `Leertaste`: Eine Folie weiter.
 #     - `Hochstelltaste + Leertaste`: Eine Folie zurück.
 #     - `Alt + r`: Aktivieren bzw. Deaktivieren der Präsentation.
-#     - Falls ein interaktive Plot bei Ausführung einer Code Zelle nicht richtig positioniert ist, deaktiviere und aktiviere Sie die Präsentation indem sie 2 Mal Alt + r drücken.
+#     - Falls ein interaktive Plot bei Ausführung einer Code Zelle nicht richtig positioniert ist, deaktiviere und aktiviere Sie die Präsentation indem sie zwei Mal `Alt + r` drücken.
 
 # %% [markdown] slideshow={"slide_type": "slide"}
 # <div align="center" style="font-size:60px;">
@@ -594,20 +596,16 @@ SimARSimple().plot(figsize=(16, 6), plot_mean_var=True)
 # %% [markdown] slideshow={"slide_type": "slide"}
 # # Praktische Anwendung: Modellierung und Prognose der Inflationsrate
 
-# %% [markdown]
-# - Im folgenden sei der Vorhersagezeitpunkt der letzte Monat der benutzt wird um einen AR(1) Prozess mittels des Kleinsten Quadrate Schätzers.
-# In-sample, out-of-sample definieren
-# - Im folgenden schätzen wir einen AR(1) Prozess mittels des Kleinsten Quadrate Schätzers.
-# - Die Mehrschrittprognose ist rekursiv gegeben durch $Pred[Y_{t+h}] = aPred[Y_{t+h-1}]$
+# %% [markdown] slideshow={"slide_type": "fragment"}
+# - Im folgenden schätzen wir AR(1) Prozesse mittels des Kleinsten Quadrate Schätzers für verschiedene "in-sample" Zeiträume.
+# - Ein "in-sample" Zeitraum der Länge $T$ beinhaltet die Daten, die für die Schätzung benutzt werden,
+#     und geht von Stichprobenanfang bis zu einem gewissen Monat. 
+# - Die "out-of-sample" Daten sind dann die Daten nach diesem Monat.
+# - Für diese "out-of-sample" Daten machen wir einen Mehrschrittprognose $\text{Pred}[Y_{T+h}], h\geq 1$, die rekursiv gegeben ist durch
+#
+# $$\text{Pred}[Y_{T+h}] = a\text{Pred}[Y_{T+h-1}]$$
 
-# %% [markdown] slideshow={"slide_type": "notes"}
-# - Keine Kreuzvalidierung nötig, da least-squares benutzt wird, man könnten den autoregressiven Parameter natürlich penalisieren und dann tunen
-# - Fitten bis 2018, dann Prognose
-# - fitten bis 2020 (vor Corona und Wirtschaftskrise), dann Prognose
-# - Diskussion: Ist da ein Strukturbruch passiert? Stationarität verletzt? Es ist möglich, wenn auch eher unwahrscheinlich, dass die Zeitreihen so ansteigt (mit Simulation rausfinden wie wahrscheinlich das ist, dass so ein Trend mindestens beobachtet wird)
-# - Rein datenbasiert das schwer zu beantworten. Eher Expertenwissen oder komplexere Modell wo externe Faktoren eine Rolle spielen (Konsumausgaben, Wirtschaftliche Entwicklung, was treibt die Inflation)
-
-# %% [markdown] slideshow={"slide_type": "slide"}
+# %% [markdown] slideshow={"slide_type": "skip"}
 # Wir betrachen ohne Corona
 # - Am 31. Dezember 2019 wurde der Ausbruch einer neuen Lungenentzündung mit noch unbekannter Ursache in Wuhan in China bestätigt.[5] Am 30. Januar 2020 rief die Weltgesundheitsorganisation (WHO) angesichts der Ausbreitung und schnellen Zunahme der Infektionen mit dem Coronavirus 2019-nCoV eine internationale Gesundheitsnotlage au
 # - Es gibt mehrere Möglichkeiten wie man schätzt, wie benutzen KQ
@@ -619,7 +617,16 @@ SimARSimple().plot(figsize=(16, 6), plot_mean_var=True)
 #
 # A DataFrame or array of exogenous variables to include in the model
 #
-# $Y_t = c + aY_{t-1} + \delta D_t + U_t$
+
+# %% [markdown] slideshow={"slide_type": "skip"}
+# ## Ohne Dummy
+
+# %% [markdown] slideshow={"slide_type": "notes"}
+# - Keine Kreuzvalidierung nötig, da least-squares benutzt wird, man könnten den autoregressiven Parameter natürlich penalisieren und dann tunen
+# - Fitten bis 2018, dann Prognose
+# - fitten bis 2020 (vor Corona und Wirtschaftskrise), dann Prognose
+# - Diskussion: Ist da ein Strukturbruch passiert? Stationarität verletzt? Es ist möglich, wenn auch eher unwahrscheinlich, dass die Zeitreihen so ansteigt (mit Simulation rausfinden wie wahrscheinlich das ist, dass so ein Trend mindestens beobachtet wird)
+# - Rein datenbasiert das schwer zu beantworten. Eher Expertenwissen oder komplexere Modell wo externe Faktoren eine Rolle spielen (Konsumausgaben, Wirtschaftliche Entwicklung, was treibt die Inflation)
 
 # %% slideshow={"slide_type": "notes"}
 %matplotlib ipympl 
@@ -627,51 +634,44 @@ SimARSimple().plot(figsize=(16, 6), plot_mean_var=True)
 from IPython.display import display, HTML
 # display(HTML("<style>.container { width:95% !important; }</style>"))
 
-from plv.data import load_verbraucherpreisindex, max_inflation, corona_begin
-from plv.plot import plot_ts, plot_seasonality, plot_is_oos_forecast, InteractiveForecastPlot, InteractiveForecastPlotNew
+# from plv.data import load_verbraucherpreisindex, max_inflation, corona_begin
+# from plv.plot import plot_ts, plot_seasonality, plot_is_oos_forecast, InteractiveForecastPlot, InteractiveForecastPlotNew
 
-inflation = load_verbraucherpreisindex(filter_columns=["inflation"])
-
-# %% slideshow={"slide_type": "slide"}
-# direkt der plot
-from plv.model import AR1
-
-ar1 = AR1()
-
-# %% [markdown]
-# ## Ohne Dummy
+# inflation = load_verbraucherpreisindex(filter_columns=["inflation"])
 
 # %% slideshow={"slide_type": "slide"}
-a = InteractiveForecastPlotNew(ar1, inflation) # , dummy=None) # , figsize=(13, 5.5), ylim=(-1, 8.5))
-a.plot()
+from plv.plot import forecast_inflation;
+forecast_inflation()
 
-# %% slideshow={"slide_type": "slide"}
-from plv.plot import plot_forecast;
-plot_forecast(inflation)
+# %% [markdown] slideshow={"slide_type": "slide"}
+# **Beobachtungen:**
+# - Die vorherige Analyse lässt vermuten, dass die Annahme der schwachen Stationarität ab der Corona Krise nicht plausibel ist.
+# - Auch wenn der geschätzte autoregressive Parameter des Prozesses bis zum aktuellsten Monat wieder kleiner als 1 ist, so ist die Entwicklung der implizierten Inflationsrate eventuell zu hoch.
+# - **Frage:**
+# Wie können wir damit umgehen, dass die Ereignisse zwischen Corona Beginn und Februar 2023 (= Zeitpunkt der höchsten Inflation) eine
+# Ausnahme darstellt und diese die langfristige Prognose der Inflation nicht beeinflussen sollten?
+#
+# **Idee:**
+#
+# Definiere die Krisen Dummy $D_t$, so dass $D_t = 1$ wenn $t$ in Corona Beginn und Februar 2023 und 0 sonst und schätze
+# $$Y_t = c + aY_{t-1} + \delta D_t + U_t$$. 
 
 # %% [markdown] slideshow={"slide_type": "notes"}
 # 2019 und 2020 lag die monatliche Inflationsrate in Deutschland zunächst meist zwischen 1 und 2 Prozent, in der zweiten Jahreshälfte 2020 sank sie vorübergehend leicht in den negativen Bereich. In dieser Zeit war die deutsche Mehrwertsteuer aufgrund der Corona-Krise sechs Monate lang abgesenkt worden.
 
-# %% [markdown]
-# ## Mit dummy
+# %% [markdown] slideshow={"slide_type": "skip"}
+# ## Mit Dummy
 
 # %% slideshow={"slide_type": "slide"}
-plot_forecast(inflation, dummy=True)
-
-# %% slideshow={"slide_type": "slide"}
-from plv.model import CrisisDummy
-dummy = CrisisDummy()
-print(f"Corona Beginn = {dummy.start}.", f"Höhepunkt der Inflation = {dummy.end}")
-a = InteractiveForecastPlotNew(ar1, inflation, dummy=dummy)  # , figsize=(13, 5.5), ylim=(-1, 8.5))
-a.plot()
+forecast_inflation(dummy=True)
 
 # %% slideshow={"slide_type": "notes"}
 # Je näher an nicht-stationär desto volatiler wird die Schätzung für den Mittelwert aus dem AR(1) Modell
 # Siehe inflation.loc["2020-01-01":"2021-06"] -> inflation.loc["2020-01-01":"2021-07"]
 
-# %%
-# Zusammenfassung
-
+# %% [markdown] slideshow={"slide_type": "slide"}
+# # Zusammenfassung
+#
 
 
 # %% [markdown] slideshow={"slide_type": "slide"}
