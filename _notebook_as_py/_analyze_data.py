@@ -116,8 +116,87 @@ fig = sm.graphics.tsa.month_plot(dta)
 # %% [markdown]
 # # Zusammenhang Prozess und Daten
 
+# %%
+import matplotlib.dates as mdates
+
+# Sample data with Timestamps
+timestamps = pd.to_datetime(['2023-01-01', '2023-01-10'])
+x_start, x_end = mdates.date2num(timestamps)
+
+# Create a figure and axis
+fig, ax = plt.subplots()
+
+# Define the parameters of the rectangle
+y = 0
+width = x_end - x_start
+height = 10
+fill_color = 'blue'  # Change this to your desired fill color
+
+# Create a Rectangle object and add it to the axis
+rectangle = patches.Rectangle((x_start, y), width, height, linewidth=1, edgecolor='black', facecolor=fill_color)
+ax.add_patch(rectangle)
+
+# Set axis limits and display the plot
+ax.set_xlim(min(timestamps) - pd.Timedelta(days=1), max(timestamps) + pd.Timedelta(days=1))
+ax.set_ylim(0, 10)  # Adjust the y-axis limits as needed
+plt.gca().set_aspect('auto')  # Set aspect ratio to 'auto' to allow for date-based x-axis
+plt.xticks(rotation=45)  # Rotate x-axis labels for better readability
+plt.show()
+
+
+# %%
+import matplotlib.pyplot as plt
+
+plt.close("all")
+
+# Create a simple plot
+x = [1, 2, 3, 4, 5]
+y = [1, 4, 9, 16, 25]
+line, = plt.plot(x, y)
+
+# Get the color of the line
+line_color = line.get_color()
+
+# Display the color
+print(f"The color of the line is {line_color}")
+
+# Show the plot
+plt.show()
+
+line_color
+
+# %%
+import numpy as np
+import pandas as pd
+import matplotlib.patches as patches
+
+# Activate the widget based backend.
+%matplotlib ipympl
+
+date = pd.date_range("2010", "2024", freq="MS")
+x = pd.Series(range(0, len(date)), index=date)
+
+x_start, x_end = mdates.date2num(pd.to_datetime(["2022", "2023"]))
+width = x_end - x_start
+height = 10
+
+
+fig, ax = plt.subplots()
+ax.grid()
+# ax.set_ylim(-5, 5)
+# Initialize a plot object with y = x. We'll be modifying y below.
+# This returns a list of `.Line2D` representing the plotted data. We grab the first one -- we only have 1 series.
+line = ax.plot(x.index, x)
+
+rectangle = patches.Rectangle((x_start, y), width, height, linewidth=1, edgecolor='black', facecolor="#50C878", label="ha")
+ax.add_patch(rectangle)
+ax.legend()
+# rectangle = patches.Rectangle((pd.Timestamp("2016"), 0), 9.5, 10, linewidth=0, edgecolor='r', facecolor='red', alpha=0.2)
+# ax.add_patch(rectangle)
+
 # %% slideshow={"slide_type": "slide"}
 import numpy as np
+import matplotlib.patches as patches
 
 # Activate the widget based backend.
 %matplotlib ipympl
@@ -130,11 +209,18 @@ ax.set_ylim(-5, 5)
 # This returns a list of `.Line2D` representing the plotted data. We grab the first one -- we only have 1 series.
 line = ax.plot(x, x)[0]
 
+rectangle = patches.Rectangle((1, 0), 9.5, 10, linewidth=0, edgecolor='r', facecolor='red', alpha=0.2)
+ax.add_patch(rectangle)
+
+
+# %% slideshow={"slide_type": "slide"}
 @interact(m=(-2.0, 2.0), b=(-3, 3, 0.5))
 def update_line(m=1, b=0.5):
     line.set_ydata(m * x + b)
     # Request a widget redraw.
     fig.canvas.draw_idle()
+    
+    import matplotlib.patches as patches
 
 
 # %% slideshow={"slide_type": "slide"}
@@ -277,7 +363,7 @@ plt.close("all")
 a.plot(figsize=(12, 6))
 
 # %%
-# import ipywidget
+import ipywidgets
 widget = ipywidgets.ToggleButtons(
     options=['Daten', 'Zufallsvariablen', 'Mögliche Daten', 'Mögliche Trajektorien', 'Daten Trajektorie'],
     description='A',
@@ -287,7 +373,21 @@ widget = ipywidgets.ToggleButtons(
 #     icon='check'
 )
 
+widget = ipywidgets.ToggleButton(
+            value=False,
+            description='Zeige Out-of-sample Daten',
+            disabled=False,
+            button_style='info', # 'success', 'info', 'warning', 'danger' or ''
+            # tooltip='Description',
+            # icon='check'
+        )
 
+
+widget = ipywidgets.Checkbox(
+    value=False,
+    description='Check me',
+    disabled=False
+)
 
 from IPython.display import display
 

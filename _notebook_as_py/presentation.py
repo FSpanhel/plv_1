@@ -13,6 +13,10 @@
 #     name: python3
 # ---
 
+# %%
+num_open_figures = len(plt.get_fignums())
+num_open_figures
+
 # %% slideshow={"slide_type": "slide"}
 %matplotlib inline
 
@@ -27,8 +31,108 @@ def plot_graph(n):
 
 interact(plot_graph, n=(2,30))
 
-# %% slideshow={"slide_type": "slide"}
-# assert False
+# %%
+inflation.index.strftime('%Y')[::12].to_numpy().tolist()
+
+# %%
+dates
+
+# %%
+dates[::12].strftime("%Y")
+
+# %%
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+
+# Generate some sample data (timestamps and corresponding values)
+dates = pd.date_range(start='2020-01-01', end='2022-12-31', freq='M')
+values = np.random.randint(0, 100, len(dates))
+
+# Create a plot
+plt.plot(dates, values)
+
+# Customize the x-axis ticks and labels
+plt.xticks(dates[::12].strftime("%Y"), rotation=45)  # Show ticks every 6 months and rotate the labels
+
+# Add labels and title
+plt.xlabel('Date')
+plt.ylabel('Values')
+plt.title('Values Over Time')
+
+# Show the plot
+plt.tight_layout()
+plt.show()
+
+
+# %%
+y_ticks = {}
+y_ticks["key"] = range(1, 8)
+y_ticks["value"] = [f"{y}%" for y in y_ticks["key"]]
+y_ticks
+
+
+# %%
+def plot_inf():
+    import matplotlib as mpl
+    figsize = (6, 4)
+
+    mpl.rcParams['font.size'] = 8
+    import matplotlib.pyplot as plt
+    from matplotlib.ticker import MaxNLocator
+    from matplotlib.ticker import MultipleLocator
+    import pandas as pd
+
+    fig, ax = plt.subplots(figsize=figsize)
+    if False:
+        fig.subplots_adjust(
+            left=0.05, 
+            # right=0.9, 
+            top=0.95, 
+            # bottom=0.1
+        )
+    y = inflation.loc["2000":]
+    y_max = "2028"
+    ax.plot(y.index, y)
+    ax.set_xlim(y.index.min(), pd.Timestamp(y_max))
+    ax.set_title(
+            "Zeitreihe der Inflationsrate: Prozentuale Veränderung des\n Verbraucherpreisindex"
+            " zum Vorjahresmonat\n Quelle: https://www.destatis.de/"
+        )
+
+    ax.axvline(
+        x=pd.Timestamp(corona_begin), color='red', linestyle='--', label='Corona Beginn'
+    )
+    ax.legend(fontsize="large")
+
+    # ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+    # ax.xaxis.set_major_locator(MultipleLocator(1))
+    # ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+    ax.grid(True, axis='x', linestyle='--', which='major')
+    # ax.xaxis.set_major_locator(plt.MultipleLocator(1))
+
+    # ax.set_xticks(inflation.index.strftime('%Y')[::48].to_numpy().tolist(), rotation=45) 
+    
+    xticks = pd.date_range(y.index.min(), y_max, freq= "MS")
+
+    cycle = 24
+    ax.set_xticks(xticks[::cycle], xticks.strftime('%Y')[::cycle], rotation=45);
+    # ax.set_yticks(y.index[::12], y.index.strftime('%Y')[::12], rotation=45);
+    
+    mpl.rcParams['font.size'] = 14; 
+    
+    y_ticks = {}
+    y_ticks["key"] = range(0, 8 + 1)
+    y_ticks["value"] = [f"{y}%" for y in y_ticks["key"]]
+
+
+    ax.set_yticks(y_ticks["key"], y_ticks["value"])
+    
+    ax.text(pd.Timestamp("2024-09"), 6.5, "?", fontsize=40, color="gray") # , ha='center', va='center')
+    ax.annotate("→", (pd.Timestamp("2025-09"), 6), fontsize=50, ha='center', va='center', color="gray")
+
+plot_inf()
+
 
 # %% slideshow={"slide_type": "skip"}
 # For interactive plots
@@ -42,15 +146,25 @@ from plv.plot import plot_ts, plot_seasonality, InteractiveForecastPlot , plot_i
 
 inflation = load_verbraucherpreisindex(filter_columns=["inflation"])
 
+
+import matplotlib as mpl
+ 
+mpl.rcParams['font.size'] = 14; 
+mpl.rcParams['lines.markersize'] = 10
+
+import numpy as np
+seed_value = 0; np.random.seed(seed_value);
+
 # %% [markdown] slideshow={"slide_type": "slide"}
-# [TODO] 
-# - QR Code zu Binder Präsentation, Tiny URL verwenden?
-# - Es kann bis zu 30 Sekunden dauern, bis die Präsentation gestartet wird.
-# - Kurzes Intro zu Bedienung:
-#     - Space
-#     - Shift + Tab
-#     - Zommen der Website
-#     - Zoomen hilft auch wenn ein interaktives Bild nicht angezeigt wird
+# - Die Vortragspräsentation ist als interaktive Rise Präsentation konzeptiert.
+# - Bitte öffnen sie folgende URL in ihrem Browser, um die interaktive Präsentation zu starten.
+# <!-- oder scannen den QR Code -> kann ja das dann nicht bedienen? -->
+# - Es kann ein wenig dauern, bis die Präsentation gestartet wird. Notfalls laden Sie die Seite bitte neu.
+# - Die interaktive Präsentation kann wie folgt bedient werden:
+#     - `Leertaste`: Eine Folie weiter.
+#     - `Hochstelltaste + Leertaste`: Eine Folie zurück.
+#     - `Alt + r`: Aktivieren bzw. Deaktivieren der Präsentation.
+#     - Falls ein interaktive Plot bei Ausführung einer Code Zelle nicht richtig positioniert ist, deaktiviere und aktiviere Sie die Präsentation indem sie 2 Mal Alt + r drücken.
 
 # %% [markdown] slideshow={"slide_type": "slide"}
 # <div align="center" style="font-size:60px;">
@@ -67,15 +181,10 @@ inflation = load_verbraucherpreisindex(filter_columns=["inflation"])
 #
 
 # %% [markdown] slideshow={"slide_type": "notes"}
-# [TODO] Evtl. TOC?
-# - About me
-# - Einführung und Motivation [5 Min]
+# - Einführung und Motivation
 # - Illustration des Zusammenhangs zwischen Zeitreihendaten und -prozess
-# - Stationarität
-#     - Definition [4 Min]
-#     - Illustration anhand AR(1) [6 Min]
-#     - Testen von Stationarität [4 Min] -> Low Priority
-# - Praktische Anwendung auf X Daten [10 Min]
+# - Definition und Illustration der Stationarität 
+# - Praktische Anwendung anhand der Prognose von Inflationsdaten
 
 # %% [markdown] slideshow={"slide_type": "notes"}
 # - Lernziele sind, dass die Studierende den Zusammenhang zwischen Prozess und Daten verstehen 
@@ -83,35 +192,10 @@ inflation = load_verbraucherpreisindex(filter_columns=["inflation"])
 # - Den AR(1) Prozess kennenlernen und wann er stationär ist
 # - Eine praktische Anwendung einens stationären AR(1) Prozess sehen
 
-# %% [markdown] slideshow={"slide_type": "notes"}
-# About me [TODO: Auf Deutsch]
-# <br>
-# <br>
-# <div style="font-size:40px;">
-# Dr. rer. nat. Fabian Spanhel
-# <div/>
-#     
-# <div align="left" style="font-size:32px;">
-# <div/>
-# <br>
-#
-# - Studies in economics with a focus on econometrics & statistics
-# - PhD in statistics
-# - Since November 2016 working as a Data Scientist at ProSiebenSat.1
-
 # %% [markdown] slideshow={"slide_type": "slide"}
 # # Einführung und Motivation
-# <br>
-# <br>
-# <br>
-# <br>
-# <br>
-# <br>
-# <br>
-# <br>
-# <br>
-# <br>
-# Hier noch Indexmietvertrag und Verbraucherpreisindex
+#
+# Wieso ist der Mietpreis für manche Mieter in diesem Jahr enorm angestiegen?
 
 # %% [markdown] slideshow={"slide_type": "notes"}
 # - Wer von Ihnen hat einen Indexmietvertrag? 
@@ -123,12 +207,13 @@ inflation = load_verbraucherpreisindex(filter_columns=["inflation"])
 # - Grafik Inflation
 #     - Was bedeutet monatliche Inflation: Die Veränderung des Verbraucherpreisindex zum Vorjahr wird als Inflationsrate bezeichnet
 
-# %% slideshow={"slide_type": "skip"}
-import matplotlib as mpl
-mpl.rcParams['font.size'] = 18
+# %% hide_input=false slideshow={"slide_type": "fragment"} cell_style="split"
+plot_inf()
 
-# %% hide_input=false slideshow={"slide_type": "slide"}
-plot_inflation(inflation, figsize=(16, 6)) 
+# %% [markdown] slideshow={"slide_type": "fragment"} cell_style="split"
+# - In einer Indexmiete steigt die Kaltmiete mit den Verbraucherpreisen.
+# - Die **Inflationsrate** ist die prozentuale Veränderung der Verbraucherpreise zum Vorjahresmonat.
+# - Aufgrund mehrere Krisen ist die Inflationsrate seit 2 Jahren auf den höchsten Stand seit der Wiedervereinigung gestiegen.
 
 # %% [markdown] slideshow={"slide_type": "notes"}
 # - Wirtschaftsdaten (Börsenkurse, Zinsindizes, Absatzzahlen), Wetterdaten, Unternehmensdaten
@@ -142,13 +227,29 @@ plot_inflation(inflation, figsize=(16, 6))
 # Im Folgenden, sei $T \subset \mathbb{T}$ eine abzählbare Teilmenge von $\mathbb{R}$.
 #
 # Wenn wir von einer (diskreten) Zeitreihe sprechen, können damit zwei verschiedene Begriffe gemeint sein:
+# <blockquote style="width: auto; background-color: 
+#                    lightyellow; color: black; 
+#                    margin: 70px; 
+#                    padding: 20px; 
+#                    border: 3px solid #ccc;
+#                    margin-bottom: 0px;
+#                    margin-top: 60px
+#                    ">
+# <!--
 # 1. Eine Zeitreihe ist eine Abfolge von Daten $(y_t)_{t=1,...,T}$, die in zeitlicher Reihenfolge angeordnet sind.
+# <br><br>
 # 2. Eine Zeitreihe ist ein stochastischer Prozess $(Y_t)_{t\in \mathbb{T}}$, d.h., ein Folge von Zufallsvariablen mit einem Index $t$, der für Zeitpunkte steht.
+# -->
+# <ol style="margin: 20; padding: 0">
+#     <li>Eine Zeitreihe ist eine <strong>Abfolge von Daten</strong> $(y_t)_{t=1,...,T}$, die in zeitlicher Reihenfolge angeordnet sind.</li>
+#     <li>Eine Zeitreihe ist ein <strong>stochastischer Prozess</strong> $(Y_t)_{t\in \mathbb{T}}$, d.h., ein Folge von Zufallsvariablen mit einem Index $t$, der für Zeitpunkte steht.</li>
+# </ol>
+# </blockquote>
 #
-# [geld und neue Slide]
+#
+
+# %% [markdown] slideshow={"slide_type": "fragment"}
 # **Die Verbindung zwischen 1. und 2. ergibt sich dadurch, dass Daten $(y_t)_{t=1,...,T}$ in 1. als eine Stichprobe eines zugrunde liegenden stochastischen Prozesses $(Y_t)_{t\in \mathbb{T}}$ in 2. aufgefasst werden.**
-#
-#
 
 # %% [markdown] slideshow={"slide_type": "slide"}
 # **Illustration des Zusammenhangs zwischen Zeitreihendaten und -prozess**
@@ -157,10 +258,9 @@ plot_inflation(inflation, figsize=(16, 6))
 # - Wichtig dass zu verstehen, in meiner Erfahrung war das unklar für manche Studierende oder sogar Doktoranden, dann ist auch alles leichter
 
 # %% slideshow={"slide_type": "fragment"} hide_input=false
-%matplotlib widget
-from plv.plot import DataVsProcess
-DataVsProcess().plot(figsize=(14, 5))
-# Seed setzen
+%matplotlib widget 
+from plv.plot import DataVsProcess; 
+DataVsProcess().plot(figsize=(14, 6.5));
 
 # %% [markdown] slideshow={"slide_type": "skip"}
 # ## Annahmen an einen Zeitreihenprozess für die statistische Inferenz und Modellierung
@@ -184,17 +284,21 @@ DataVsProcess().plot(figsize=(14, 5))
 
 # %% [markdown] slideshow={"slide_type": "fragment"}
 # - Für die statistische Analyse und Modellierung von Zeitreihen müssen Annahmen getroffen werden, da in der Praxis meist nur eine Realisierung des datengenerierenden Prozesses vorliegt.
+# <!--
 # - Neben Ergodizität ist Stationarität eine bedeutende Eigenschaft eines stochastischen Prozesses.
+# -->
 # <!-- - Es gibt zwei Definition von Stationarität, die Klasse der stochastischen Prozess einschränken.
 # -->
-# - Wir konzentieren uns hier auf die sogenannte **schwache Stationarität**. [Mit obigen Satz mergen]
-# -> new slide
-#
+# - Wir konzentieren uns hier auf die sogenannte **schwache Stationarität**.
+
+# %% [markdown] slideshow={"slide_type": "fragment"}
 # <blockquote style="width: auto; background-color: 
 #                    lightyellow; color: black; 
 #                    margin: 70px; 
 #                    padding: 20px; 
-#                    border: 3px solid #ccc
+#                    border: 3px solid #ccc;
+#                    margin-bottom: 0px;
+#                    margin-top: 0px
 #                    ">
 # Definition: (<strong>Schwache Stationarität</strong>)<br>
 # Ein stochastischer Prozess $(Y_t)_{t\in \mathbb{T}}$ ist schwach stationär $:\!\!\iff$
@@ -204,8 +308,8 @@ DataVsProcess().plot(figsize=(14, 5))
 # <br><br>
 # für alle $\forall t \in \mathbb{T}$ und $\forall h \in \mathbb{T}$
 # </blockquote>
-#
-#     
+
+# %% [markdown] slideshow={"slide_type": "skip"}
 # > **DEFINITION:** (Schwache Stationarität) <br>
 # > Ein stochastischer Prozess $(Y_t)_{t\in \mathbb{T}}$ ist schwach stationär $:\!\!\iff$
 # >
@@ -273,11 +377,20 @@ DataVsProcess().plot(figsize=(14, 5))
 #                    lightyellow; color: black; 
 #                    margin: 70px; 
 #                    padding: 20px; 
-#                    border: 3px solid #ccc
+#                    border: 3px solid #ccc;
+#                    margin-bottom: 0px;
+#                    margin-top: 50px
 #                    ">
 # Definition: (<strong>Autoregressiver Prozess der Ordnung 1</strong>)<br>
-# $(Y_t)_{t\in \mathbb{T}}$ ist ein autoregressiver Prozess der Ordnung 1  $:\!\!\iff$<br>
-# $Y_t = c + aY_{t-1} + U_{t}$ für alle ${t\in \mathbb{T}}$ und $(U_t)_{t\in \mathbb{T}}$ ist Weißes Rauschen.
+# $(Y_t)_{t\in \mathbb{T}}$ ist ein autoregressiver Prozess der Ordnung 1  $:\!\!\iff$<br> Für alle ${t\in \mathbb{T}}$ gilt
+#
+# $$
+# \begin{align}
+# Y_t &= c + aY_{t-1} + U_{t}
+# \end{align}
+# $$
+#
+# wobei $(U_t)_{t\in \mathbb{T}}$ Weißes Rauschen ist.
 # </blockquote>
 #
 # - Wir bezeichnen diese Prozesse auch kurz als AR(1) Prozesse.
@@ -308,31 +421,56 @@ DataVsProcess().plot(figsize=(14, 5))
 # - Um diese Frage zu untersuchen, ist es hilfreich Realisierungen des Prozesses zu generieren.
 # - Wie können wir $T$ Realisierungen eines AR(1) Prozess $Y_t = c + a Y_{t-1} + U_t$ generieren?
 
-# %% slideshow={"slide_type": "fragment"} cell_style="split"
+# %% [markdown] slideshow={"slide_type": "notes"}
+# ```python
+# import numpy as np
+#
+# T = 10
+# (c, a) = (0, 0.5)
+#
+# u = np.random.normal(size=T)
+# y = np.zeros(T)
+# for t in range(1, T):
+#     y[t] = c + a * y[t-1] + u[t] 
+#     
+# print(y)
+# ```
+
+# %% slideshow={"slide_type": "fragment"} cell_style="center"
 import numpy as np
-import matplotlib.pyplot as plt
 
-T = 1000
-(c, a) = (2, 0.5)
-u = np.random.normal(0, 1, T + 1)  # ohne  0 , 1?
-y = np.zeros(T, float)  # ohne float?
-for t in range(1, T):
-    y[t] = c + a * y[t-1] + u[t] 
+T = 10
+(c, a) = (0, 0.5)
+,
+u = np.random.normal(size=T)
+for t in range(T):
+    y[t] = c + a * y[t-1] + u[t]
     
-plt.close("all")  # plot weg
-y 
+print(y)
 
-
-# %% slideshow={"slide_type": "fragment"} cell_style="split"
-plt.plot(y);
 
 # %% slideshow={"slide_type": "skip"}
 # For interactive plots
 %matplotlib ipympl 
 
 # %% slideshow={"slide_type": "slide"}
-from plv.plot import SimAR
-SimAR().plot(figsize=(16, 6), plot_mean_var=True)  # n zuerst dann r
+from plv.plot import SimARSimple
+SimARSimple().plot(figsize=(16, 6)),
+
+# %% [markdown] slideshow={"slide_type": "notes"}
+# - Mit n = 100 und r = 1 anfangen
+# - zeige a = 0, a = -1, a = 1
+# - Dann fragen, wie könnte ich Stationarität analysieren?
+
+# %% slideshow={"slide_type": "slide"}
+from plv.plot import SimARSimple
+SimARSimple().plot(figsize=(16, 6), plot_mean_var=True)
+
+# %% [markdown] slideshow={"slide_type": "notes"}
+# - r auf 1001 setzen, T so lassen
+# - a erhöhen bis zu a=0.99, sieht so aus als würde die Varianz ansteigen -> jetzt T auf 1001 setzen
+# - a = 1
+# - a = 1.1
 
 # %% [markdown] slideshow={"slide_type": "skip"}
 # ## Skizze des Beweis für die schwache Stationarität des AR(1) Prozesses
@@ -345,7 +483,7 @@ SimAR().plot(figsize=(16, 6), plot_mean_var=True)  # n zuerst dann r
 #                    padding: 5px; 
 #                    border: 3px solid #ccc;
 #                    margin-bottom: -0px;
-#                    margin-top: 12px
+#                    margin-top: 40px
 #                    ">
 # Theorem: (<strong>Hinreichende Bedingungen für die Stationarität eines AR(1) Prozesses</strong>)<br>
 # Sei $Y_t = aY_{t-1} + U_t$, wobei $(U_t)_{t \in \mathbb{Z}}$ Weißes Rauschen ist und $\sup_{t \in \mathbb{Z}} E[Y_t^2] < \infty$. <br><br>
@@ -419,16 +557,17 @@ SimAR().plot(figsize=(16, 6), plot_mean_var=True)  # n zuerst dann r
 
 # %% [markdown] slideshow={"slide_type": "slide"}
 # **Schritt 2: Berechung des Erwartungswerts und Kovarianzfunktion von $(Y_t)_{t \in \mathbb{Z}}$.**
+#
+# Setzen wir $\displaystyle{X:= \sum_{i=0}^{\infty}a^{i}U_{t_i}}$ dann gilt $\displaystyle{Y_t \stackrel{2}{\to} \sum_{i=0}^{\infty}a^{i}U_{t_i}}$ und es folgt
 # <!--
 # Falls $|a|<1$, folgt dass $\sum_{i=0}^{\infty}|a^{i}|\in \mathbb{R}$, und wenn  $(U_t)_{t\in\mathbb{Z}}$ Weißes Rauschen ist folgt aus [Fubini-Tonelli Theorems](https://en.wikipedia.org/wiki/Fubini's_theorem#Fubini-Tonelli) 
 #
 # Durch die Anwendung des [Fubini-Tonelli Theorems](https://en.wikipedia.org/wiki/Fubini's_theorem#Fubini-Tonelli) und der Tatsache, dass $\sum_{i=0}^{\infty}|a^{i}|\in \mathbb{R}$, falls $|a|<1$, und $(U_t)_{t\in\mathbb{Z}}$ Weißes Rauschen ist, folgt
 # -->
-# Es folgt
 #
 # $$
 # \begin{align*}
-# E[Y_t] & = E[\sum_{i=0}^{\infty}a^{i}U_{t-i}] \stackrel{|a|<1,\ (U_t)_{t\in\mathbb{Z}} \text{Weißes Rauschen}, \text{ Fubini-Tonelli}}{=} \sum_{i=0}^{\infty}a^{i}\underbrace{E[U_{t-i}]}_{=\ 0} = 0
+# E[Y_t] & = E[\sum_{i=0}^{\infty}a^{i}U_{t-i}] \stackrel{|a|<1,\ (U_t)_{t\in\mathbb{Z}} \text{Weißes Rauschen}}{=} \sum_{i=0}^{\infty}a^{i}\underbrace{E[U_{t-i}]}_{=\ 0} = 0
 # \end{align*}
 # $$
 #
@@ -436,7 +575,7 @@ SimAR().plot(figsize=(16, 6), plot_mean_var=True)  # n zuerst dann r
 # $$
 # \gamma(t, h) = Cov[Y_t, Y_{t-h}] 
 # %= E[\sum_{i=0}^{\infty}a^{i}U_{t-i} \sum_{j=0}^{\infty}a^{j}U_{t-h-j}] 
-# \stackrel{|a|<1,\ (U_t)_{t\in\mathbb{Z}} \text{Weißes Rauschen}, \text{ Fubini-Tonelli}}{=}
+# \stackrel{|a|<1,\ (U_t)_{t\in\mathbb{Z}} \text{Weißes Rauschen}}{=}
 # %\ldots
 # %\sum_{i=0}^{\infty}\sum_{j=0}^{\infty}a^{i}a^{j}\underbrace{E[U_{t-i}U_{t-h-j}}_{\sigma_U^2 \text{ if } i = h + j, \text{ else } 0}]
 # %\\
@@ -450,47 +589,16 @@ SimAR().plot(figsize=(16, 6), plot_mean_var=True)  # n zuerst dann r
 # - Noch offener Punkt, wenn X_h to X, wieso ist dann E[Y_t] = E[X]? Also warum passt das alles?
 # - [Fubini-Tonelli Theorems](https://en.wikipedia.org/wiki/Fubini's_theorem#Fubini-Tonelli)
 # https://math.stackexchange.com/questions/1166994/linearity-of-expectation-for-infinite-sums
-
-# %% [markdown] slideshow={"slide_type": "skip"}
-# ## Testen auf Stationarität -> Am ende machen, low Priority
-
-# %% [markdown] slideshow={"slide_type": "skip"}
-# Angenommen unsere Daten werden durch den vorher beschriebenen AR(1) Prozess generiert, wie könnte somit ein Test auf (schwache) Stationarität aussehen?
-#
-# Wie könnte die Null- und Alternativhypothese aussehen?
-
-# %% [markdown] slideshow={"slide_type": "skip"}
-# 1. Die vorherigen Simulationen vorhin haben illustriert und der Beweis gezeigt, dass ein AR(1) Prozess (schwach) stationär ist solange |a| < 1 ist.
-# 2. Man könnte also H_0: |a| >= 1 vs. H_1: |a| < 1.
-# 3. Da in der Praxis in der Regel a >= 0, Vereinfachung zu H_0: a >= 1 vs. H_1: a < 1
-
-# %% [markdown] slideshow={"slide_type": "skip"}
-# ## Der (Augmented) Dickey-Fuller Test
-# 5. Der Dickey-Fuller Test macht das im Prinzip (verwendet aber die Differenzen)
-# 5. Erweiterung zum Augmented Dickey-Fuller Test
-#
-# Der (A)DF Test ist vermutlich der populärste Test für die (schwache) Stationarität einer Zeitreihen.
-# Allerdings ist der damit auch vermutlich einer der Tests dessen Annahmen nicht erfüllt sind.
-# - Die Zeitreihendaten werden durch einen (linearen) autoregressiven Prozess generiert.
-# - Die Störterme/Innovationen des Process sind iid N(0, \sigma^2)
-#
-
-# %% [markdown] slideshow={"slide_type": "notes"}
-# Diskussion: 1. Annahme approximation okay, 2. aber eigentlich nie erfüllt.
-#
-# Evtl. Simulation zeigen, dass ADF Test nicht covered wenn Störterme N(0, \sigma^2)
-
-# %% [markdown] slideshow={"slide_type": "skip"}
-# ## Wie teste ich auf Stationarität in der Praxis?
-# 1.	Theoretisches Resultat dass es keinen Test gibt der das asymptotische immer zeigen kann
-#     1.	Vll. davor: Zeitreihen simulieren von statistischen Prozessen (u.a. Copula) und Frage ob schwach stationär (evtl. hierzu abstimmen)
-# 1.	In der Praxis: Eher inhaltliche Überlegungen
-#     1.	Deterministische Trends: Saisonalität 
-# 1.	Davon abgesehen: Man kann nicht stationäre Prozess auch mit stationären approximieren (in der next step vorhersage), klappt ganz okay soweit nicht zu weit weg von 
-#
+# - Fubini-Tonelli oder Dominated Convergence Theorem erlaubt vertauschen
 
 # %% [markdown] slideshow={"slide_type": "slide"}
 # # Praktische Anwendung: Modellierung und Prognose der Inflationsrate
+
+# %% [markdown]
+# - Im folgenden sei der Vorhersagezeitpunkt der letzte Monat der benutzt wird um einen AR(1) Prozess mittels des Kleinsten Quadrate Schätzers.
+# In-sample, out-of-sample definieren
+# - Im folgenden schätzen wir einen AR(1) Prozess mittels des Kleinsten Quadrate Schätzers.
+# - Die Mehrschrittprognose ist rekursiv gegeben durch $Pred[Y_{t+h}] = aPred[Y_{t+h-1}]$
 
 # %% [markdown] slideshow={"slide_type": "notes"}
 # - Keine Kreuzvalidierung nötig, da least-squares benutzt wird, man könnten den autoregressiven Parameter natürlich penalisieren und dann tunen
@@ -513,14 +621,14 @@ SimAR().plot(figsize=(16, 6), plot_mean_var=True)  # n zuerst dann r
 #
 # $Y_t = c + aY_{t-1} + \delta D_t + U_t$
 
-# %%
+# %% slideshow={"slide_type": "notes"}
 %matplotlib ipympl 
 
 from IPython.display import display, HTML
 # display(HTML("<style>.container { width:95% !important; }</style>"))
 
 from plv.data import load_verbraucherpreisindex, max_inflation, corona_begin
-from plv.plot import plot_ts, plot_seasonality, plot_is_oos_forecast, InteractiveForecastPlot
+from plv.plot import plot_ts, plot_seasonality, plot_is_oos_forecast, InteractiveForecastPlot, InteractiveForecastPlotNew
 
 inflation = load_verbraucherpreisindex(filter_columns=["inflation"])
 
@@ -533,32 +641,38 @@ ar1 = AR1()
 # %% [markdown]
 # ## Ohne Dummy
 
-# %%
-# inflation.forecast_plot(ar1)
+# %% slideshow={"slide_type": "slide"}
+a = InteractiveForecastPlotNew(ar1, inflation) # , dummy=None) # , figsize=(13, 5.5), ylim=(-1, 8.5))
+a.plot()
 
 # %% slideshow={"slide_type": "slide"}
-a = InteractiveForecastPlot(ar1, inflation, dummy=dummy) # , dummy=None) # , figsize=(13, 5.5), ylim=(-1, 8.5))
-a.plot()
+from plv.plot import plot_forecast;
+plot_forecast(inflation)
+
+# %% [markdown] slideshow={"slide_type": "notes"}
+# 2019 und 2020 lag die monatliche Inflationsrate in Deutschland zunächst meist zwischen 1 und 2 Prozent, in der zweiten Jahreshälfte 2020 sank sie vorübergehend leicht in den negativen Bereich. In dieser Zeit war die deutsche Mehrwertsteuer aufgrund der Corona-Krise sechs Monate lang abgesenkt worden.
 
 # %% [markdown]
 # ## Mit dummy
 
-# %%
+# %% slideshow={"slide_type": "slide"}
+plot_forecast(inflation, dummy=True)
+
+# %% slideshow={"slide_type": "slide"}
 from plv.model import CrisisDummy
 dummy = CrisisDummy()
 print(f"Corona Beginn = {dummy.start}.", f"Höhepunkt der Inflation = {dummy.end}")
-a = InteractiveForecastPlot(ar1, inflation, dummy=dummy)  # , figsize=(13, 5.5), ylim=(-1, 8.5))
+a = InteractiveForecastPlotNew(ar1, inflation, dummy=dummy)  # , figsize=(13, 5.5), ylim=(-1, 8.5))
 a.plot()
 
 # %% slideshow={"slide_type": "notes"}
 # Je näher an nicht-stationär desto volatiler wird die Schätzung für den Mittelwert aus dem AR(1) Modell
 # Siehe inflation.loc["2020-01-01":"2021-06"] -> inflation.loc["2020-01-01":"2021-07"]
 
-# %% [markdown]
-# ### Plot seasonality -> Eher weg
-
 # %%
-plot_seasonality(pre_corona);
+# Zusammenfassung
+
+
 
 # %% [markdown] slideshow={"slide_type": "slide"}
 # # Literatur
