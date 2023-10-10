@@ -226,9 +226,7 @@ plot_inf()
 # %% [markdown] slideshow={"slide_type": "slide"}
 # **Was ist eine Zeitreihe?**
 #
-# [TODO: Ersetze $T \subset \mathbb{T}$ durch $T \subset \mathbb{Z}$ und $\mathbb{T}$ durch $\mathbb{Z}$]
-#
-# Im Folgenden, sei $T \subset \mathbb{T}$ eine abzählbare Teilmenge von $\mathbb{R}$.
+# Im Folgenden, sei $T \in \mathbb{N}$.
 #
 # Wenn wir von einer (diskreten) Zeitreihe sprechen, können damit zwei verschiedene Begriffe gemeint sein:
 # <blockquote style="width: auto; background-color: 
@@ -242,18 +240,18 @@ plot_inf()
 # <!--
 # 1. Eine Zeitreihe ist eine Abfolge von Daten $(y_t)_{t=1,...,T}$, die in zeitlicher Reihenfolge angeordnet sind.
 # <br><br>
-# 2. Eine Zeitreihe ist ein stochastischer Prozess $(Y_t)_{t\in \mathbb{T}}$, d.h., ein Folge von Zufallsvariablen mit einem Index $t$, der für Zeitpunkte steht.
+# 2. Eine Zeitreihe ist ein stochastischer Prozess $(Y_t)_{t\in \mathbb{Z}}$, d.h., ein Folge von Zufallsvariablen mit einem Index $t$, der für Zeitpunkte steht.
 # -->
 # <ol style="margin: 20; padding: 0">
 #     <li>Eine Zeitreihe ist eine <strong>Abfolge von Daten</strong> $(y_t)_{t=1,...,T}$, die in zeitlicher Reihenfolge angeordnet sind.</li>
-#     <li>Eine Zeitreihe ist ein <strong>stochastischer Prozess</strong> $(Y_t)_{t\in \mathbb{T}}$, d.h., ein Folge von Zufallsvariablen mit einem Index $t$, der für Zeitpunkte steht.</li>
+#     <li>Eine Zeitreihe ist ein <strong>stochastischer Prozess</strong> $(Y_t)_{t\in \mathbb{Z}}$, d.h., ein Folge von Zufallsvariablen mit einem Index $t$, der für Zeitpunkte steht.</li>
 # </ol>
 # </blockquote>
 #
 #
 
 # %% [markdown] slideshow={"slide_type": "fragment"}
-# **Die Verbindung zwischen 1. und 2. ergibt sich dadurch, dass Daten $(y_t)_{t=1,...,T}$ in 1. als eine Stichprobe eines zugrunde liegenden stochastischen Prozesses $(Y_t)_{t\in \mathbb{T}}$ in 2. aufgefasst werden.**
+# **Die Verbindung zwischen 1. und 2. ergibt sich dadurch, dass Daten $(y_t)_{t=1,...,T}$ in 1. als eine Stichprobe eines zugrunde liegenden stochastischen Prozesses $(Y_t)_{t\in \mathbb{Z}}$ in 2. aufgefasst werden.**
 
 # %% [markdown] slideshow={"slide_type": "slide"}
 # **Illustration des Zusammenhangs zwischen Zeitreihendaten und -prozess**
@@ -263,7 +261,7 @@ plot_inf()
 
 # %% slideshow={"slide_type": "fragment"} hide_input=false
 %matplotlib widget 
-from plv.plot import DataVsProcess; 
+from plv.plot import DataVsProcess; *
 DataVsProcess().plot(figsize=(14, 6.5));
 
 # %% [markdown] slideshow={"slide_type": "skip"}
@@ -305,12 +303,12 @@ DataVsProcess().plot(figsize=(14, 6.5));
 #                    margin-top: 0px
 #                    ">
 # Definition: (<strong>Schwache Stationarität</strong>)<br>
-# Ein stochastischer Prozess $(Y_t)_{t\in \mathbb{T}}$ ist schwach stationär $:\!\!\iff$
+# Ein stochastischer Prozess $(Y_t)_{t\in \mathbb{Z}}$ ist schwach stationär $:\!\!\iff$
 # <br><br>
 # 1. $E[Y_t] = \mu \in \mathbb{R}$ <br>
 # 2. $Cov[Y_t, Y_{t-h}] = \gamma(h) \in \mathbb{R}$
 # <br><br>
-# für alle $\forall t \in \mathbb{T}$ und $\forall h \in \mathbb{T}$
+# für alle $t, h \in \mathbb{Z}$.
 # </blockquote>
 
 # %% [markdown] slideshow={"slide_type": "skip"}
@@ -367,7 +365,7 @@ DataVsProcess().plot(figsize=(14, 6.5));
 #                    border: 3px solid #ccc
 #                    ">
 # Definition: (<strong>Weißes Rauschen</strong>)<br>
-# $(U_t)_{t\in \mathbb{T}}$ ist Weißes Rauschen $:\!\!\iff$ Für alle $t, h \in \mathbb{Z}$, mit $t\neq h$ gilt:
+# $(U_t)_{t\in \mathbb{Z}}$ ist Weißes Rauschen $:\!\!\iff$ Für alle $t, h \in \mathbb{Z}$, mit $t\neq h$ gilt:
 # <br>
 #
 # 1. $E[U_t] = 0$
@@ -386,20 +384,20 @@ DataVsProcess().plot(figsize=(14, 6.5));
 #                    margin-top: 50px
 #                    ">
 # Definition: (<strong>Autoregressiver Prozess der Ordnung 1</strong>)<br>
-# $(Y_t)_{t\in \mathbb{T}}$ ist ein autoregressiver Prozess der Ordnung 1  $:\!\!\iff$<br> Für alle ${t\in \mathbb{T}}$ gilt
+# $(Y_t)_{t\in \mathbb{Z}}$ ist ein autoregressiver Prozess der Ordnung 1  $:\!\!\iff$<br> Für alle ${t\in \mathbb{Z}}$ gilt
 #
-# $$
+# $
 # \begin{align}
 # Y_t &= c + aY_{t-1} + U_{t}
 # \end{align}
-# $$
+# $
 #
-# wobei $(U_t)_{t\in \mathbb{T}}$ Weißes Rauschen ist.
+# wobei $(U_t)_{t\in \mathbb{Z}}$ Weißes Rauschen ist.
 # </blockquote>
 #
 # - Wir bezeichnen diese Prozesse auch kurz als AR(1) Prozesse.
 # - Die Zufallsvariable $Y_t$ ist also linear abhängig von der Zufallsvariable $Y_{t-1}$ davor und einem Zufallsfehler $U_t$.
-# - Frage: Ist $(Y_t)_{t\in \mathbb{T}}$ (schwach) stationär?
+# - Frage: Ist $(Y_t)_{t\in \mathbb{Z}}$ (schwach) stationär?
 
 # %% [markdown] slideshow={"slide_type": "skip"}
 # ## Illustration anhand der Simulation eines (linearen) AR(1) Prozesses
@@ -481,6 +479,166 @@ SimARSimple().plot(figsize=(16, 6), plot_mean_var=True) # evtl burnin setzen?
 
 # %% [markdown] slideshow={"slide_type": "slide"}
 # **Skizze des Beweis für die schwache Stationarität des AR(1) Prozesses**
+# <blockquote style="width: auto; background-color: 
+#                    lightyellow; color: black; 
+#                    margin: 70px; 
+#                    padding: 5px; 
+#                    border: 3px solid #ccc;
+#                    margin-bottom: -0px;
+#                    margin-top: 40px
+#                    ">
+# Theorem: (<strong>Hinreichende Bedingungen für die Stationarität eines AR(1) Prozesses</strong>)<br>
+# Sei $Y_t = aY_{t-1} + U_t$, wobei $(U_t)_{t \in \mathbb{Z}}$ Weißes Rauschen ist und $\sup_{t \in \mathbb{Z}} E[Y_t^2] < \infty$. <br><br>
+# Falls $|a| < 1$,  dann ist $(Y_t)_{t \in \mathbb{Z}}$ schwach stationär.
+# </blockquote>
+#
+# - Der Beweis dieses Theorems erfordert Kenntnisse der Maß- und Integrationstheorie.
+# - Im Folgenden wird der Beweis nur skizziert.
+
+# %% [markdown] slideshow={"slide_type": "slide"}
+# **Beweisidee: Limes Repräsentation von $Y_t$ als eine Funktion von $(U_t)_{t \in \mathbb{Z}}$**
+#
+# - Rekursive Substituierung führt zu
+#
+#     $
+#     \begin{align}
+#     Y_t & = aY_{t-1} + U_t = a(aY_{t-2} + U_{t-1}) + U_t = \ldots = a^h Y_{t-h} + \sum_{i=0}^{h-1}a^{i}U_{t-i} =: X_h
+#     \end{align}
+#     $
+
+# %% [markdown] slideshow={"slide_type": "fragment"}
+# - Was passiert mit $X_h$, wenn $h\to\infty$? 
+# <!-- &#9888;&#65039; $X_h$ ist eine Zufallsvariable. -->
+
+# %% [markdown] slideshow={"slide_type": "fragment"}
+# - Man kann zeigen, dass $\exists X \in L^2\colon X_h \stackrel{2}{\to} X$ falls die Annahme des Theorems erfüllt sind und unter ihrer wiederholte Anwendung folgern, dass 
+#
+#     $
+#     \begin{align*}
+#     E[Y_t] & = 0
+#     \\
+#     Cov[Y_t, Y_{t-h}] 
+#     & = a^h\frac{\sigma_U^2}{1-a^2} \in \mathbb{R}
+#     \end{align*}
+#     $
+#
+# <!--
+# $
+# \begin{align*}
+# E[Y_t] &= 0, \quad
+# Cov[Y_t, Y_{t-h}] = a^h\frac{\sigma_U^2}{1-a^2} \in \mathbb{R}
+# \end{align*}
+# $
+# -->
+#
+# <!--
+# $
+# \begin{align*}
+# E[Y_t] & = 0
+# \\
+# Cov[Y_t, Y_{t-h}] 
+# & = a^h\frac{\sigma_U^2}{1-a^2}
+# \end{align*}
+# $
+# Somit ist $E[Y_t]=0$ und $\gamma(t, h) \in \mathbb{R}$ hängt nicht von $t$ ab. Folglich ist $(Y_t)_{t \in \mathbb{Z}}$ stationär. &#11035;
+# -->
+
+# %% [markdown] slideshow={"slide_type": "slide"}
+# # Praktische Anwendung: Modellierung und Prognose der Inflationsrate
+
+# %% [markdown] slideshow={"slide_type": "fragment"}
+# - Im Folgenden schätzen wir AR(1) Prozesse mittels des Kleinsten Quadrate Schätzers für mehrere "in-sample" Zeiträume.
+# - Ein "in-sample" Zeitraum der Länge $T$ beinhaltet die Daten, die für die Schätzung benutzt werden,
+#     und geht von Stichprobenanfang bis zu einem gewissen Monat. 
+# - Die "out-of-sample" Daten sind dann die Daten nach diesem Monat.
+# - Für diese "out-of-sample" Daten machen wir ab dem Zeitpunkt $T$ eine Mehrschrittprognose $\text{Pred}_T[Y_{T+h}], h\geq 1$, die rekursiv gegeben ist durch
+#
+# $$\text{Pred}_T[Y_{T+h}] = a\text{Pred}_T[Y_{T+h-1}]$$
+
+# %% [markdown] slideshow={"slide_type": "skip"}
+# Wir betrachen ohne Corona
+# - Am 31. Dezember 2019 wurde der Ausbruch einer neuen Lungenentzündung mit noch unbekannter Ursache in Wuhan in China bestätigt.[5] Am 30. Januar 2020 rief die Weltgesundheitsorganisation (WHO) angesichts der Ausbreitung und schnellen Zunahme der Infektionen mit dem Coronavirus 2019-nCoV eine internationale Gesundheitsnotlage au
+# - Es gibt mehrere Möglichkeiten wie man schätzt, wie benutzen KQ
+# Custom deterministic terms (deterministic)
+#
+# Accepts a DeterministicProcess
+#
+# Exogenous variables (exog)
+#
+# A DataFrame or array of exogenous variables to include in the model
+#
+
+# %% [markdown] slideshow={"slide_type": "skip"}
+# ## Ohne Dummy
+
+# %% [markdown] slideshow={"slide_type": "notes"}
+# - Keine Kreuzvalidierung nötig, da least-squares benutzt wird, man könnten den autoregressiven Parameter natürlich penalisieren und dann tunen
+# - Fitten bis 2018, dann Prognose
+# - fitten bis 2020 (vor Corona und Wirtschaftskrise), dann Prognose
+# - Diskussion: Ist da ein Strukturbruch passiert? Stationarität verletzt? Es ist möglich, wenn auch eher unwahrscheinlich, dass die Zeitreihen so ansteigt (mit Simulation rausfinden wie wahrscheinlich das ist, dass so ein Trend mindestens beobachtet wird)
+# - Rein datenbasiert das schwer zu beantworten. Eher Expertenwissen oder komplexere Modell wo externe Faktoren eine Rolle spielen (Konsumausgaben, Wirtschaftliche Entwicklung, was treibt die Inflation)
+
+# %% slideshow={"slide_type": "notes"}
+%matplotlib ipympl 
+
+from IPython.display import display, HTML
+# display(HTML("<style>.container { width:95% !important; }</style>"))
+
+# from plv.data import load_verbraucherpreisindex, max_inflation, corona_begin
+# from plv.plot import plot_ts, plot_seasonality, plot_is_oos_forecast, InteractiveForecastPlot, InteractiveForecastPlotNew
+
+# inflation = load_verbraucherpreisindex(filter_columns=["inflation"])
+
+# %% slideshow={"slide_type": "slide"}
+from plv.plot import forecast_inflation;
+forecast_inflation()
+
+# %% [markdown] slideshow={"slide_type": "slide"}
+# **Beobachtungen:**
+# - Die vorherige Analyse lässt vermuten, dass die Annahme der schwachen Stationarität ab der Corona Krise nicht plausibel ist.
+# - Auch wenn der geschätzte autoregressive Parameter des Prozesses bis zum aktuellsten Monat wieder kleiner als 1 ist, so ist die Entwicklung der implizierten Inflationsrate eventuell zu hoch.
+# - **Frage:**
+# Wie können wir damit umgehen, dass die Ereignisse zwischen Corona Beginn und Februar 2023 (= Zeitpunkt der höchsten Inflation) eine
+# Ausnahme darstellt und diese die langfristige Prognose der Inflation nicht beeinflussen sollten?
+
+# %% [markdown] slideshow={"slide_type": "fragment"}
+# **Idee:**
+#
+# Definiere die Krisen Dummy $D_t$, so dass $D_t = 1$ wenn $t$ in Corona Beginn und Februar 2023 und 0 sonst und schätze
+# $$Y_t = c + aY_{t-1} + \delta D_t + U_t$$. 
+
+# %% [markdown] slideshow={"slide_type": "notes"}
+# 2019 und 2020 lag die monatliche Inflationsrate in Deutschland zunächst meist zwischen 1 und 2 Prozent, in der zweiten Jahreshälfte 2020 sank sie vorübergehend leicht in den negativen Bereich. In dieser Zeit war die deutsche Mehrwertsteuer aufgrund der Corona-Krise sechs Monate lang abgesenkt worden.
+
+# %% [markdown] slideshow={"slide_type": "skip"}
+# ## Mit Dummy
+
+# %% slideshow={"slide_type": "slide"}
+forecast_inflation(dummy=True)
+
+# %% slideshow={"slide_type": "notes"}
+# Je näher an nicht-stationär desto volatiler wird die Schätzung für den Mittelwert aus dem AR(1) Modell
+# Siehe inflation.loc["2020-01-01":"2021-06"] -> inflation.loc["2020-01-01":"2021-07"]
+
+# %% [markdown] slideshow={"slide_type": "slide"}
+# # Zusammenfassung
+#
+
+
+# %% [markdown] slideshow={"slide_type": "slide"}
+# # Literatur
+#
+# Hamilton, James D. Time Series Analysis. Princeton University Press, 1994. https://doi.org/10.2307/j.ctv14jx6sm.
+#
+# Lütkepohl, Helmut. New Introduction to Multiple Time Series Analysis. Springer, 2005. https://doi.org/10.1007/978-3-540-27752-1
+
+# %% [markdown] slideshow={"slide_type": "slide"}
+# # Appendix
+
+# %% [markdown] slideshow={"slide_type": "slide"}
+# ## Ausführliche Skizze des Beweis für die schwache Stationarität des AR(1) Prozesses
+
+# %% [markdown] slideshow={"slide_type": "slide"}
 # <blockquote style="width: auto; background-color: 
 #                    lightyellow; color: black; 
 #                    margin: 70px; 
@@ -594,91 +752,3 @@ SimARSimple().plot(figsize=(16, 6), plot_mean_var=True) # evtl burnin setzen?
 # - [Fubini-Tonelli Theorems](https://en.wikipedia.org/wiki/Fubini's_theorem#Fubini-Tonelli)
 # https://math.stackexchange.com/questions/1166994/linearity-of-expectation-for-infinite-sums
 # - Fubini-Tonelli oder Dominated Convergence Theorem erlaubt vertauschen
-
-# %% [markdown] slideshow={"slide_type": "slide"}
-# # Praktische Anwendung: Modellierung und Prognose der Inflationsrate
-
-# %% [markdown] slideshow={"slide_type": "fragment"}
-# - Im Folgenden schätzen wir AR(1) Prozesse mittels des Kleinsten Quadrate Schätzers für mehrere "in-sample" Zeiträume.
-# - Ein "in-sample" Zeitraum der Länge $T$ beinhaltet die Daten, die für die Schätzung benutzt werden,
-#     und geht von Stichprobenanfang bis zu einem gewissen Monat. 
-# - Die "out-of-sample" Daten sind dann die Daten nach diesem Monat.
-# - Für diese "out-of-sample" Daten machen wir ab dem Zeitpunkt $T$ eine Mehrschrittprognose $\text{Pred}_T[Y_{T+h}], h\geq 1$, die rekursiv gegeben ist durch
-#
-# $$\text{Pred}_T[Y_{T+h}] = a\text{Pred}_T[Y_{T+h-1}]$$
-
-# %% [markdown] slideshow={"slide_type": "skip"}
-# Wir betrachen ohne Corona
-# - Am 31. Dezember 2019 wurde der Ausbruch einer neuen Lungenentzündung mit noch unbekannter Ursache in Wuhan in China bestätigt.[5] Am 30. Januar 2020 rief die Weltgesundheitsorganisation (WHO) angesichts der Ausbreitung und schnellen Zunahme der Infektionen mit dem Coronavirus 2019-nCoV eine internationale Gesundheitsnotlage au
-# - Es gibt mehrere Möglichkeiten wie man schätzt, wie benutzen KQ
-# Custom deterministic terms (deterministic)
-#
-# Accepts a DeterministicProcess
-#
-# Exogenous variables (exog)
-#
-# A DataFrame or array of exogenous variables to include in the model
-#
-
-# %% [markdown] slideshow={"slide_type": "skip"}
-# ## Ohne Dummy
-
-# %% [markdown] slideshow={"slide_type": "notes"}
-# - Keine Kreuzvalidierung nötig, da least-squares benutzt wird, man könnten den autoregressiven Parameter natürlich penalisieren und dann tunen
-# - Fitten bis 2018, dann Prognose
-# - fitten bis 2020 (vor Corona und Wirtschaftskrise), dann Prognose
-# - Diskussion: Ist da ein Strukturbruch passiert? Stationarität verletzt? Es ist möglich, wenn auch eher unwahrscheinlich, dass die Zeitreihen so ansteigt (mit Simulation rausfinden wie wahrscheinlich das ist, dass so ein Trend mindestens beobachtet wird)
-# - Rein datenbasiert das schwer zu beantworten. Eher Expertenwissen oder komplexere Modell wo externe Faktoren eine Rolle spielen (Konsumausgaben, Wirtschaftliche Entwicklung, was treibt die Inflation)
-
-# %% slideshow={"slide_type": "notes"}
-%matplotlib ipympl 
-
-from IPython.display import display, HTML
-# display(HTML("<style>.container { width:95% !important; }</style>"))
-
-# from plv.data import load_verbraucherpreisindex, max_inflation, corona_begin
-# from plv.plot import plot_ts, plot_seasonality, plot_is_oos_forecast, InteractiveForecastPlot, InteractiveForecastPlotNew
-
-# inflation = load_verbraucherpreisindex(filter_columns=["inflation"])
-
-# %% slideshow={"slide_type": "slide"}
-from plv.plot import forecast_inflation;
-forecast_inflation()
-
-# %% [markdown] slideshow={"slide_type": "slide"}
-# **Beobachtungen:**
-# - Die vorherige Analyse lässt vermuten, dass die Annahme der schwachen Stationarität ab der Corona Krise nicht plausibel ist.
-# - Auch wenn der geschätzte autoregressive Parameter des Prozesses bis zum aktuellsten Monat wieder kleiner als 1 ist, so ist die Entwicklung der implizierten Inflationsrate eventuell zu hoch.
-# - **Frage:**
-# Wie können wir damit umgehen, dass die Ereignisse zwischen Corona Beginn und Februar 2023 (= Zeitpunkt der höchsten Inflation) eine
-# Ausnahme darstellt und diese die langfristige Prognose der Inflation nicht beeinflussen sollten?
-#
-# **Idee:**
-#
-# Definiere die Krisen Dummy $D_t$, so dass $D_t = 1$ wenn $t$ in Corona Beginn und Februar 2023 und 0 sonst und schätze
-# $$Y_t = c + aY_{t-1} + \delta D_t + U_t$$. 
-
-# %% [markdown] slideshow={"slide_type": "notes"}
-# 2019 und 2020 lag die monatliche Inflationsrate in Deutschland zunächst meist zwischen 1 und 2 Prozent, in der zweiten Jahreshälfte 2020 sank sie vorübergehend leicht in den negativen Bereich. In dieser Zeit war die deutsche Mehrwertsteuer aufgrund der Corona-Krise sechs Monate lang abgesenkt worden.
-
-# %% [markdown] slideshow={"slide_type": "skip"}
-# ## Mit Dummy
-
-# %% slideshow={"slide_type": "slide"}
-forecast_inflation(dummy=True)
-
-# %% slideshow={"slide_type": "notes"}
-# Je näher an nicht-stationär desto volatiler wird die Schätzung für den Mittelwert aus dem AR(1) Modell
-# Siehe inflation.loc["2020-01-01":"2021-06"] -> inflation.loc["2020-01-01":"2021-07"]
-
-# %% [markdown] slideshow={"slide_type": "slide"}
-# # Zusammenfassung
-#
-
-
-# %% [markdown] slideshow={"slide_type": "slide"}
-# # Literatur
-#
-# Hamilton, James D. Time Series Analysis. Princeton University Press, 1994. https://doi.org/10.2307/j.ctv14jx6sm.
-#
-# Lütkepohl, Helmut. New Introduction to Multiple Time Series Analysis. Springer, 2005. https://doi.org/10.1007/978-3-540-27752-1
