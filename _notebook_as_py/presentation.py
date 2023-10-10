@@ -443,8 +443,8 @@ import numpy as np
 
 T = 10
 (c, a) = (0, 0.5)
-,
 u = np.random.normal(size=T)
+y = np.zeros(T) 
 for t in range(T):
     y[t] = c + a * y[t-1] + u[t]
     
@@ -457,7 +457,7 @@ print(y)
 
 # %% slideshow={"slide_type": "slide"}
 from plv.plot import SimARSimple
-SimARSimple().plot(figsize=(16, 6)),
+SimARSimple().plot(figsize=(16, 6))
 
 # %% [markdown] slideshow={"slide_type": "notes"}
 # - Mit n = 100 und r = 1 anfangen
@@ -466,7 +466,7 @@ SimARSimple().plot(figsize=(16, 6)),
 
 # %% slideshow={"slide_type": "slide"}
 from plv.plot import SimARSimple
-SimARSimple().plot(figsize=(16, 6), plot_mean_var=True)
+SimARSimple().plot(figsize=(16, 6), plot_mean_var=True) # evtl burnin setzen? 
 
 # %% [markdown] slideshow={"slide_type": "notes"}
 # - r auf 1001 setzen, T so lassen
@@ -597,11 +597,11 @@ SimARSimple().plot(figsize=(16, 6), plot_mean_var=True)
 # # Praktische Anwendung: Modellierung und Prognose der Inflationsrate
 
 # %% [markdown] slideshow={"slide_type": "fragment"}
-# - Im folgenden schätzen wir AR(1) Prozesse mittels des Kleinsten Quadrate Schätzers für verschiedene "in-sample" Zeiträume.
+# - Im Folgenden schätzen wir AR(1) Prozesse mittels des Kleinsten Quadrate Schätzers für mehrere "in-sample" Zeiträume.
 # - Ein "in-sample" Zeitraum der Länge $T$ beinhaltet die Daten, die für die Schätzung benutzt werden,
 #     und geht von Stichprobenanfang bis zu einem gewissen Monat. 
 # - Die "out-of-sample" Daten sind dann die Daten nach diesem Monat.
-# - Für diese "out-of-sample" Daten machen wir einen Mehrschrittprognose $\text{Pred}[Y_{T+h}], h\geq 1$, die rekursiv gegeben ist durch
+# - Für diese "out-of-sample" Daten machen wir eine Mehrschrittprognose $\text{Pred}[Y_{T+h}], h\geq 1$, die rekursiv gegeben ist durch
 #
 # $$\text{Pred}[Y_{T+h}] = a\text{Pred}[Y_{T+h-1}]$$
 
