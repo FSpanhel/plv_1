@@ -25,10 +25,10 @@
 # <div align="left" style="font-size:16px;">
 # <div/>
 
-# %% [markdown]
+# %% [markdown] slideshow={"slide_type": "skip"}
 # # Why does this course exist?
 
-# %% [markdown] slideshow={"slide_type": "slide"}
+# %% [markdown] slideshow={"slide_type": "skip"}
 # ## Recap Data Science Projekt / Challenge
 #
 # Bachelor Course in the 5th semester
@@ -43,24 +43,27 @@
 #   - Good coding habits (Style, type hints, documentation, Git hooks).
 #   - Project management and collaborative coding using Git and GitLab.
 
-# %%
-Personal motivation for DSC and also here (I have a mathematical background and took me some to grasp how to build a product, I would have highly appreciate it if this was clear)
-There is a young difference between an ad hoc analysis or building a data product
+# %% [markdown] slideshow={"slide_type": "notes"}
+# Personal motivation for DSC and also here (I have a mathematical background and took me some to grasp how to build a product, I would have highly appreciate it if this was clear)
+# There is a young difference between an ad hoc analysis or building a data product
 
 # %% [markdown] slideshow={"slide_type": "slide"}
 # ## In the last years: [Link to Still Sexy, 2 Min, evtl. aber auch verbal aufzählen bei Data Science Project Workflow] 
-# - From On-premise to cloud
-# - From POC to Production (much more Software Engineering) 
-# - No Unicorns but specialized roles (given an Eindruck to these specialized roles)
-#   - But it’s likely because the data science role is getting split into multiple different titles. And conveniently cheaper ones. 
-#   - ML & Data Engineering role arises
+# - From on-premise to cloud.
+# - From POC to production --> More Software Engineering.
+# - No Unicorns anymore but the data science role is getting split into multiple specialized roles -> ML & Data Engineering roles have emerged.
+# - MLOps which should facilitate development and operationalization of AI has become more important -> More Software Engineering.
+# - Before specializing in the job market, I think it is good to get an impression of these specialized roles and learn more software engineering -> Objective of this course -> Oder DSC wollte software engineering Konzepte beibringen, das wird hier fortgeführt und aber auch Einblick in die Rollen
+#
+# See also ["**Is Data Scientist Still the Sexiest Job of the 21st Century?**"](https://hbr.org/2022/07/is-data-scientist-still-the-sexiest-job-of-the-21st-century)
+#
+#
+
+# %% [markdown] slideshow={"slide_type": "notes"}
+# - But it’s likely because the data science role is getting split into multiple different titles. And conveniently cheaper ones. 
 # - Salaries have decreased (More people, and also shift to ML, reddit links, also influenced by recession, Downgrading data scientists to DA, DS -> ML, DS -> DE)
 # - Very few junior roles, Demand for senior roles
 # - LLMs… (Do we still need DA or people with DL Knowledge, or people how anbinden APIs from the Great Tech Giants?)
-#
-
-# %%
-[ min]
 
 # %% [markdown] slideshow={"slide_type": "slide"}
 # # Data Science Project Workflow [5 Min]
@@ -166,14 +169,14 @@ Organizations need to determine boundaries between these roles in a way that wor
 # %% [markdown] slideshow={"slide_type": "slide"}
 # **Model tuning** 
 #
-# - $K$-fold cross-validation is most commonly used to tune the hyperparameters of a model
+# - $K$-fold cross-validation is most commonly used to tune the hyperparameters of a model.
 # - It is typically based on the assumption of iid data.
 # - How to do cross-validation when we have temporal dependence?
 
 # %% [markdown] slideshow={"slide_type": "fragment"}
 # - $K$-fold cross-validation can be used in [special cases](https://www.sciencedirect.com/science/article/abs/pii/S0167947317302384).
 # - In general, cross-validation must consider existing dependence of the data to prevent [data leakage](https://en.wikipedia.org/wiki/Leakage_(machine_learning).
-# - Data leakage is a serious problem ncern in academica and industry.
+# - Data leakage is a [serious problem in academica and industry](doi:10.1016/j.patter.2023.100804).
 #
 
 # %% [markdown] slideshow={"slide_type": "subslide"}
@@ -278,7 +281,7 @@ run()
 # - Not the right tool for complex interfaces and/or nested state.
 # - Examples: [Analytics Dashoboard](https://shamiraty-streamlit-dashboard-descriptive-analytics-home-5ks7sm.streamlit.app/), [MathGPT](https://mathgpt.streamlit.app/).
 
-# %% [markdown]
+# %% [markdown] slideshow={"slide_type": "notes"}
 # -> Who knows it? Who was worked with it?
 #
 # Pandas has 40k stars
@@ -293,7 +296,7 @@ run()
 #
 # While Streamlit is incredibly succinct, enabling the creation of web apps in impressively few lines of code, it is not without drawbacks. It has a very limited ability to make customized interfaces, and it has a rather odd mechanism where everything is rerun every time a state is changed
 
-# %% [markdown]
+# %% [markdown] slideshow={"slide_type": "notes"}
 # Streamlit is an open-source Python library that is used for creating web applications for data science and machine learning projects with minimal effort. It is designed to make it easy for data scientists and engineers to turn data scripts into shareable web apps quickly. Streamlit simplifies the process of creating interactive and data-driven web applications by providing a high-level API and handling many of the underlying web development tasks.
 #
 # Streamlit is commonly used by data scientists, analysts, and engineers to create data dashboards, interactive data exploration tools, machine learning model demos, and other web applications that showcase and share their data-related work. It has gained popularity due to its simplicity and rapid development capabilities, making it a valuable tool for data science projects and prototyping.

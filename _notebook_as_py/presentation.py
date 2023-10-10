@@ -226,6 +226,8 @@ plot_inf()
 # %% [markdown] slideshow={"slide_type": "slide"}
 # **Was ist eine Zeitreihe?**
 #
+# [TODO: Ersetze $T \subset \mathbb{T}$ durch $T \subset \mathbb{Z}$ und $\mathbb{T}$ durch $\mathbb{Z}$]
+#
 # Im Folgenden, sei $T \subset \mathbb{T}$ eine abzählbare Teilmenge von $\mathbb{R}$.
 #
 # Wenn wir von einer (diskreten) Zeitreihe sprechen, können damit zwei verschiedene Begriffe gemeint sein:
@@ -374,7 +376,7 @@ DataVsProcess().plot(figsize=(14, 6.5));
 # </blockquote>
 
 # %% [markdown] slideshow={"slide_type": "slide"}
-# **Die Klasse der AR(1) Prozesse**
+# **Die Klasse der (linearen) AR(1) Prozesse**
 # <blockquote style="width: auto; background-color: 
 #                    lightyellow; color: black; 
 #                    margin: 70px; 
@@ -601,9 +603,9 @@ SimARSimple().plot(figsize=(16, 6), plot_mean_var=True) # evtl burnin setzen?
 # - Ein "in-sample" Zeitraum der Länge $T$ beinhaltet die Daten, die für die Schätzung benutzt werden,
 #     und geht von Stichprobenanfang bis zu einem gewissen Monat. 
 # - Die "out-of-sample" Daten sind dann die Daten nach diesem Monat.
-# - Für diese "out-of-sample" Daten machen wir eine Mehrschrittprognose $\text{Pred}[Y_{T+h}], h\geq 1$, die rekursiv gegeben ist durch
+# - Für diese "out-of-sample" Daten machen wir ab dem Zeitpunkt $T$ eine Mehrschrittprognose $\text{Pred}_T[Y_{T+h}], h\geq 1$, die rekursiv gegeben ist durch
 #
-# $$\text{Pred}[Y_{T+h}] = a\text{Pred}[Y_{T+h-1}]$$
+# $$\text{Pred}_T[Y_{T+h}] = a\text{Pred}_T[Y_{T+h-1}]$$
 
 # %% [markdown] slideshow={"slide_type": "skip"}
 # Wir betrachen ohne Corona
