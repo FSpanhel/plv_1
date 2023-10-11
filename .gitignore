@@ -12,7 +12,7 @@
 
 # do not version .ignore folder
 .ignore/
-
+mlruns/
 
 ############################## 1. PROJECT-SPECIFIC ##############################
 
