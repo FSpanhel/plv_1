@@ -133,7 +133,7 @@ def plot_inf():
 
 plot_inf()
 
-plt.savefig('inflation.png', dpi=300)
+plt.savefig('figures/inflation.png', dpi=300)
 
 
 # %% slideshow={"slide_type": "skip"}
@@ -206,7 +206,7 @@ seed_value = 0; np.random.seed(seed_value);
 # %% [markdown] slideshow={"slide_type": "fragment"}
 # <div style="display: flex; align-items: center; margin-top: -20px;">
 #   <div style="flex: 2; padding: 0px;">
-#      <img src="./inflation.png" alt="Inflationsrate" style="width: 4200px; height: 620px;"/>
+#      <img src="./figures/inflation.png" alt="Inflationsrate" style="width: 4200px; height: 620px;"/>
 #   </div>
 #   <div style="flex: 30; padding: 100px; font-size: 25px;">
 #     <ol style="margin: 0; padding: 0">
