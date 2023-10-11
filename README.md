@@ -1,1 +1,1 @@
-This repo is used to present the first part of the Probelehrveranstaltung.
+This repo is used to for the Probelehrveranstaltung.
