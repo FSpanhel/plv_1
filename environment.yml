@@ -343,4 +343,5 @@ dependencies:
   - zstd=1.5.5=hfc55251_0
   - pip:
       - rise==5.7.1
+      - -e .
 prefix: /home/spa0001f/mambaforge_new/envs/test_interactive
