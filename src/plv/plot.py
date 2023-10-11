@@ -59,6 +59,11 @@ def plot_inflation(inflation: pd.Series, figsize=(16, 4)):
     plt.legend()
     # https://www-genesis.destatis.de/genesis/online?sequenz=tabelleErgebnis&selectionname=61111-0002&startjahr=1996#abreadcrumb
 
+def data_vs_process(figsize = (12, 6)):
+    return DataVsProcess().plot(figsize)
+
+def sim_ar(figsize= (16, 6), plot_mean_var=False):
+    return SimARSimple().plot(figsize=(16, 6), plot_mean_var=plot_mean_var)
 
 def forecast_inflation(figsize = (12, 6), dummy: bool = False):
     ar1 = AR1()

@@ -71,11 +71,11 @@ y_ticks["key"] = range(1, 8)
 y_ticks["value"] = [f"{y}%" for y in y_ticks["key"]]
 y_ticks
 
-
 # %% slideshow={"slide_type": "skip"}
+import matplotlib.pyplot as plt
 def plot_inf():
     import matplotlib as mpl
-    figsize = (6, 4)
+    figsize = (8, 4)
 
     mpl.rcParams['font.size'] = 8
     import matplotlib.pyplot as plt
@@ -96,7 +96,7 @@ def plot_inf():
     ax.plot(y.index, y)
     ax.set_xlim(y.index.min(), pd.Timestamp(y_max))
     ax.set_title(
-            "Zeitreihe der Inflationsrate: Prozentuale Veränderung des\n Verbraucherpreisindex"
+            "Zeitreihe der Inflationsrate: Prozentuale Veränderung des Verbraucherpreisindex"
             " zum Vorjahresmonat\n Quelle: https://www.destatis.de/"
         )
 
@@ -133,18 +133,22 @@ def plot_inf():
 
 plot_inf()
 
+plt.savefig('inflation.png', dpi=300)
+
 
 # %% slideshow={"slide_type": "skip"}
 # For interactive plots
 %matplotlib ipympl  
 
+# %matplotlib widget # should be the same as above
+
 from IPython.display import display, HTML
 # display(HTML("<style>.container { width:95% !important; }</style>"))
 
-from plv.data import load_verbraucherpreisindex, corona_begin, max_inflation
-from plv.plot import plot_ts, plot_seasonality, InteractiveForecastPlot , plot_inflation
+# from plv.data import load_verbraucherpreisindex, corona_begin, max_inflation
+# from plv.plot import plot_ts, plot_seasonality, InteractiveForecastPlot , plot_inflation
 
-inflation = load_verbraucherpreisindex(filter_columns=["inflation"])
+# inflation = load_verbraucherpreisindex(filter_columns=["inflation"])
 
 
 import matplotlib as mpl
@@ -158,7 +162,7 @@ seed_value = 0; np.random.seed(seed_value);
 # %% [markdown] slideshow={"slide_type": "slide"}
 # **Anmerkungen zur Bedienung der interaktiven Präsentation**
 #
-# - Die Vortragspräsentation ist als interaktive [Rise](https://rise.readthedocs.io/en/latest/) Präsentation konzeptiert.
+# - Die Vortragspräsentation ist als interaktive [Rise](https://rise.readthedocs.io/en/latest/) Präsentation konzeptioniert.
 # - Um die interaktive Präsentation zu starten, öffnen Sie bitte folgende URL in ihrem Browser, 
 # <!-- oder scannen den QR Code -> kann ja das dann nicht bedienen? -->
 # - Es kann ein wenig dauern, bis die Präsentation gestartet wird. Notfalls laden Sie die Seite bitte neu.
@@ -199,6 +203,40 @@ seed_value = 0; np.random.seed(seed_value);
 #
 # Wieso ist der Mietpreis für manche Mieter in diesem Jahr enorm angestiegen?
 
+# %% [markdown] slideshow={"slide_type": "fragment"}
+# <div style="display: flex; align-items: center; margin-top: -20px;">
+#   <div style="flex: 2; padding: 0px;">
+#      <img src="./inflation.png" alt="Inflationsrate" style="width: 4200px; height: 620px;"/>
+#   </div>
+#   <div style="flex: 30; padding: 100px; font-size: 25px;">
+#     <ol style="margin: 0; padding: 0">
+#       <li>In einer Indexmiete steigt die Kaltmiete mit der <strong>Inflationsrate</strong>.</li>
+#       <li>Die <strong>Inflationsrate</strong> ist die prozentuale Veränderung der Verbraucherpreise zum Vorjahresmonat.</li>
+#       <li>Aufgrund mehrerer Krisen ist die <strong>Inflationsrate</strong> seit 2 Jahren auf den höchsten Stand seit der Wiedervereinigung gestiegen.</li>
+#     </ol>
+#   </div>
+# </div>
+
+# %% [markdown] slideshow={"slide_type": "skip"}
+# # Einführung und Motivation
+#
+# Wieso ist der Mietpreis für manche Mieter in diesem Jahr enorm angestiegen?
+
+# %% [markdown] slideshow={"slide_type": "skip"}
+# <div style="display: flex; align-items: left;">
+#   <div style="flex: 1; padding: 50px; font-size: 25px;">
+#     <ol style="margin: 200; padding: 0">
+#       <li>In einer Indexmiete steigt die Kaltmiete mit der <strong>Inflationsrate</strong>.</li>
+#       <li>Die <strong>Inflationsrate</strong> ist die prozentuale Veränderung der Verbraucherpreise zum Vorjahresmonat.</li>
+#       <li>Aufgrund mehrerer Krisen ist die Inflationsrate seit 2 Jahren auf den höchsten Stand seit der Wiedervereinigung gestiegen.</li>
+#     </ol>
+#   </div>
+#   <div style="flex: 2; padding: 0px;">
+#      <img src="./inflation.png" alt="Inflationsrate" style="width: 4000px;"/>
+#   </div>
+# </div>
+#
+
 # %% [markdown] slideshow={"slide_type": "notes"}
 # - Wer von Ihnen hat einen Indexmietvertrag? 
 #     Mit einer Indexmiete vereinbaren Mieter und Vermieter bereits im Mietvertrag, dass sich die Kaltmiete erhöht, wenn die Verbraucherpreise steigen. Die Preise ermittelt regelmäßig das Statistische Bundesamt und veröffentlicht sie in dem sogenannten Verbraucherpreisindex (VPI).
@@ -208,14 +246,6 @@ seed_value = 0; np.random.seed(seed_value);
 #     - https://zdfheute-stories-scroll.zdf.de/inflation-preise-teuer/index.html
 # - Grafik Inflation
 #     - Was bedeutet monatliche Inflation: Die Veränderung des Verbraucherpreisindex zum Vorjahr wird als Inflationsrate bezeichnet
-
-# %% hide_input=false slideshow={"slide_type": "fragment"} cell_style="split"
-plot_inf()
-
-# %% [markdown] slideshow={"slide_type": "fragment"} cell_style="split"
-# - In einer Indexmiete steigt die Kaltmiete mit den Verbraucherpreisen.
-# - Die **Inflationsrate** ist die prozentuale Veränderung der Verbraucherpreise zum Vorjahresmonat.
-# - Aufgrund mehrere Krisen ist die Inflationsrate seit 2 Jahren auf den höchsten Stand seit der Wiedervereinigung gestiegen.
 
 # %% [markdown] slideshow={"slide_type": "notes"}
 # - Wirtschaftsdaten (Börsenkurse, Zinsindizes, Absatzzahlen), Wetterdaten, Unternehmensdaten
@@ -260,9 +290,8 @@ plot_inf()
 # - Wichtig dass zu verstehen, in meiner Erfahrung war das unklar für manche Studierende oder sogar Doktoranden, dann ist auch alles leichter
 
 # %% slideshow={"slide_type": "fragment"} hide_input=false
-%matplotlib widget 
-from plv.plot import DataVsProcess; *
-DataVsProcess().plot(figsize=(14, 6.5));
+from plv.plot import data_vs_process
+data_vs_process(figsize=(14, 6.5))
 
 # %% [markdown] slideshow={"slide_type": "skip"}
 # ## Annahmen an einen Zeitreihenprozess für die statistische Inferenz und Modellierung
@@ -444,7 +473,8 @@ import numpy as np
 T = 10
 (c, a) = (0, 0.5)
 u = np.random.normal(size=T)
-y = np.zeros(T) 
+y = np.zeros(T)
+
 for t in range(T):
     y[t] = c + a * y[t-1] + u[t]
     
@@ -455,18 +485,23 @@ print(y)
 # For interactive plots
 %matplotlib ipympl 
 
-# %% slideshow={"slide_type": "slide"}
-from plv.plot import SimARSimple
-SimARSimple().plot(figsize=(16, 6))
+# %% [markdown] slideshow={"slide_type": "slide"}
+# Simulation von Realisierungen eines AR(1) Prozesses
+
+# %% slideshow={"slide_type": "-"}
+from plv.plot import sim_ar
+sim_ar(figsize=(16, 6))
 
 # %% [markdown] slideshow={"slide_type": "notes"}
 # - Mit n = 100 und r = 1 anfangen
 # - zeige a = 0, a = -1, a = 1
 # - Dann fragen, wie könnte ich Stationarität analysieren?
 
-# %% slideshow={"slide_type": "slide"}
-from plv.plot import SimARSimple
-SimARSimple().plot(figsize=(16, 6), plot_mean_var=True) # evtl burnin setzen? 
+# %% [markdown] slideshow={"slide_type": "slide"}
+# Simulation von Realisierungen eines AR(1) Prozesses: Analyse der Stationarität
+
+# %% slideshow={"slide_type": "-"}
+sim_ar(figsize=(16, 6), plot_mean_var=True) # evtl burnin setzen
 
 # %% [markdown] slideshow={"slide_type": "notes"}
 # - r auf 1001 setzen, T so lassen
@@ -511,7 +546,7 @@ SimARSimple().plot(figsize=(16, 6), plot_mean_var=True) # evtl burnin setzen?
 # <!-- &#9888;&#65039; $X_h$ ist eine Zufallsvariable. -->
 
 # %% [markdown] slideshow={"slide_type": "fragment"}
-# - Man kann zeigen, dass $\exists X \in L^2\colon X_h \stackrel{2}{\to} X$ falls die Annahme des Theorems erfüllt sind und unter ihrer wiederholte Anwendung folgern, dass 
+# - Man kann zeigen, dass $\exists X \in L^2\colon X_h \stackrel{2}{\to} X$ falls die Annahmen des Theorems erfüllt sind und unter ihrer wiederholte Anwendung folgern, dass 
 #
 #     $
 #     \begin{align*}
@@ -551,7 +586,7 @@ SimARSimple().plot(figsize=(16, 6), plot_mean_var=True) # evtl burnin setzen?
 # - Ein "in-sample" Zeitraum der Länge $T$ beinhaltet die Daten, die für die Schätzung benutzt werden,
 #     und geht von Stichprobenanfang bis zu einem gewissen Monat. 
 # - Die "out-of-sample" Daten sind dann die Daten nach diesem Monat.
-# - Für diese "out-of-sample" Daten machen wir ab dem Zeitpunkt $T$ eine Mehrschrittprognose $\text{Pred}_T[Y_{T+h}], h\geq 1$, die rekursiv gegeben ist durch
+# - Für diese "out-of-sample" Daten machen wir ab dem Zeitpunkt $T$ eine **Mehrschrittprognose** $\text{Pred}_T[Y_{T+h}], h\geq 1$, die rekursiv gegeben ist durch
 #
 # $$\text{Pred}_T[Y_{T+h}] = a\text{Pred}_T[Y_{T+h-1}]$$
 
@@ -589,32 +624,39 @@ from IPython.display import display, HTML
 
 # inflation = load_verbraucherpreisindex(filter_columns=["inflation"])
 
-# %% slideshow={"slide_type": "slide"}
+# %% [markdown] slideshow={"slide_type": "slide"}
+# **Modellierung der Inflationsrate mit einem AR(1) Prozess**
+
+# %% slideshow={"slide_type": "-"}
 from plv.plot import forecast_inflation;
-forecast_inflation()
+forecast_inflation(figsize=(16, 5.8))
 
 # %% [markdown] slideshow={"slide_type": "slide"}
 # **Beobachtungen:**
-# - Die vorherige Analyse lässt vermuten, dass die Annahme der schwachen Stationarität ab der Corona Krise nicht plausibel ist.
-# - Auch wenn der geschätzte autoregressive Parameter des Prozesses bis zum aktuellsten Monat wieder kleiner als 1 ist, so ist die Entwicklung der implizierten Inflationsrate eventuell zu hoch.
-# - **Frage:**
-# Wie können wir damit umgehen, dass die Ereignisse zwischen Corona Beginn und Februar 2023 (= Zeitpunkt der höchsten Inflation) eine
-# Ausnahme darstellt und diese die langfristige Prognose der Inflation nicht beeinflussen sollten?
+# - Die Annahme der schwachen Stationarität ist ab der Corona Krise fraglich.
+# - Auch wenn der geschätzte autoregressive Parameter $a$ des AR(1) Prozesses kleiner als 1 ist, wenn man bis zum aktuellsten Monat schätzt, so ist die langfristige Prognose eventuell zu hoch.
+#
+# **Frage:**
+#
+# Wie können wir unsere Modellierung verändern, falls die Ereignisse im Zeitraum Krise = [Januar 2020, Feburar 2023] eine Ausnahme darstellen und diese die langfristige Prognose der Inflation nicht beeinflussen sollten?
 
 # %% [markdown] slideshow={"slide_type": "fragment"}
 # **Idee:**
 #
-# Definiere die Krisen Dummy $D_t$, so dass $D_t = 1$ wenn $t$ in Corona Beginn und Februar 2023 und 0 sonst und schätze
-# $$Y_t = c + aY_{t-1} + \delta D_t + U_t$$. 
-
-# %% [markdown] slideshow={"slide_type": "notes"}
-# 2019 und 2020 lag die monatliche Inflationsrate in Deutschland zunächst meist zwischen 1 und 2 Prozent, in der zweiten Jahreshälfte 2020 sank sie vorübergehend leicht in den negativen Bereich. In dieser Zeit war die deutsche Mehrwertsteuer aufgrund der Corona-Krise sechs Monate lang abgesenkt worden.
+# Definiere die Krisen Dummy $D_t$, so dass $D_t = 1$ wenn $t \in \text{Krise}$ und 0 sonst, und schätze
+# $\begin{align}Y_t = c + aY_{t-1} + \delta D_t + U_t\end{align}$.
 
 # %% [markdown] slideshow={"slide_type": "skip"}
 # ## Mit Dummy
 
-# %% slideshow={"slide_type": "slide"}
-forecast_inflation(dummy=True)
+# %% [markdown] slideshow={"slide_type": "notes"}
+# 2019 und 2020 lag die monatliche Inflationsrate in Deutschland zunächst meist zwischen 1 und 2 Prozent, in der zweiten Jahreshälfte 2020 sank sie vorübergehend leicht in den negativen Bereich. In dieser Zeit war die deutsche Mehrwertsteuer aufgrund der Corona-Krise sechs Monate lang abgesenkt worden.
+
+# %% [markdown] slideshow={"slide_type": "slide"}
+# **Modellierung der Inflationsrate mit einem AR(1) Prozess mit Dummy**
+
+# %% slideshow={"slide_type": "-"}
+forecast_inflation(dummy=True, figsize=(16, 5.8))
 
 # %% slideshow={"slide_type": "notes"}
 # Je näher an nicht-stationär desto volatiler wird die Schätzung für den Mittelwert aus dem AR(1) Modell
@@ -622,6 +664,10 @@ forecast_inflation(dummy=True)
 
 # %% [markdown] slideshow={"slide_type": "slide"}
 # # Zusammenfassung
+# - Wir haben den Zusammenhang zwischen einem Zeitreihenprozess und -daten illustriert.
+# - Wir haben die Definition der (schwache) Stationariät kennen gelernt.
+# - Wir haben den (linearen) AR(1) Prozess kennenlernen und untersucht wann er stationär ist.
+# - Durch eine praktische Anwendung des AR(1) Prozess anhand der Modellierung der Inflationsrate haben wir das Konzept der Stationarität weiter vertieft und kritisch hinterfragt.
 #
 
 
