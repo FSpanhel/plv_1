@@ -21,7 +21,7 @@
 # - Um die interaktive Präsentation zu starten, öffnen Sie bitte folgende URL in ihrem Browser, 
 # <!-- oder scannen den QR Code -> kann ja das dann nicht bedienen? -->
 # - Es kann ein wenig dauern, bis die Präsentation gestartet wird. Notfalls laden Sie die Seite bitte neu.
-# - Die interaktive Präsentation kann wie folgt bedient werden:
+# - Die interaktive Präsentation kann mittels der Navigationspfeile oder wie folgt bedient werden:
 #     - `Leertaste`: Eine Folie weiter.
 #     - `Hochstelltaste + Leertaste`: Eine Folie zurück.
 #     - `Strg + Enter`: Laden eines interaktiven Plots.
@@ -72,26 +72,6 @@
 #     </ol>
 #   </div>
 # </div>
-
-# %% [markdown] slideshow={"slide_type": "skip"}
-# # Einführung und Motivation
-#
-# Wieso ist der Mietpreis für manche Mieter in diesem Jahr enorm angestiegen?
-
-# %% [markdown] slideshow={"slide_type": "skip"}
-# <div style="display: flex; align-items: left;">
-#   <div style="flex: 1; padding: 50px; font-size: 25px;">
-#     <ol style="margin: 200; padding: 0">
-#       <li>In einer Indexmiete steigt die Kaltmiete mit der <strong>Inflationsrate</strong>.</li>
-#       <li>Die <strong>Inflationsrate</strong> ist die prozentuale Veränderung der Verbraucherpreise zum Vorjahresmonat.</li>
-#       <li>Aufgrund mehrerer Krisen ist die Inflationsrate seit 2 Jahren auf den höchsten Stand seit der Wiedervereinigung gestiegen.</li>
-#     </ol>
-#   </div>
-#   <div style="flex: 2; padding: 0px;">
-#      <img src="./inflation.png" alt="Inflationsrate" style="width: 4000px;"/>
-#   </div>
-# </div>
-#
 
 # %% [markdown] slideshow={"slide_type": "notes"}
 # - Wer von Ihnen hat einen Indexmietvertrag? 
@@ -525,7 +505,7 @@ forecast_inflation(dummy=True, figsize=(16, 5.4))
 # - Wir haben den Zusammenhang zwischen einem Zeitreihenprozess und -daten illustriert.
 #
 # - Wir haben die Definition der (schwache) Stationariät kennen gelernt.
-# - Wir haben den (linearen) AR(1) Prozess kennenlernen und untersucht wann er stationär ist.
+# - Wir haben den (linearen) AR(1) Prozess kennengelernt und untersucht wann er stationär ist.
 # - Durch eine praktische Anwendung des AR(1) Prozess anhand der Modellierung der Inflationsrate haben wir das Konzept der Stationarität weiter vertieft und kritisch hinterfragt.
 #
 
