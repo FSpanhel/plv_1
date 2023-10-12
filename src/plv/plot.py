@@ -12,6 +12,7 @@ from matplotlib.ticker import MaxNLocator
 from matplotlib.ticker import MultipleLocator
 import matplotlib.patches as patches
 import matplotlib.dates as mdates
+import matplotlib as mpl
 
 from plv.model import AR1, CrisisDummy
 from plv.data import corona_begin, max_inflation, load_verbraucherpreisindex
@@ -19,6 +20,12 @@ from plv.data import corona_begin, max_inflation, load_verbraucherpreisindex
 
 inflation = load_verbraucherpreisindex(filter_columns=["inflation"])
 crisis_dummy = CrisisDummy()
+
+seed_value = 0
+np.random.seed(seed_value)
+
+mpl.rcParams['font.size'] = 14
+mpl.rcParams['lines.markersize'] = 10
 
 
 def plot_ts(
