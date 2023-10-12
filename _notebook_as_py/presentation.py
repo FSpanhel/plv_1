@@ -14,129 +14,6 @@
 # ---
 
 # %% slideshow={"slide_type": "skip"}
-num_open_figures = len(plt.get_fignums())
-num_open_figures
-
-# %% slideshow={"slide_type": "skip"}
-%matplotlib inline
-
-import matplotlib.pyplot as plt
-
-from ipywidgets import interact
-
-def plot_graph(n):
-    plt.plot(range(n))
-    plt.show()
-
-
-interact(plot_graph, n=(2,30))
-
-# %% slideshow={"slide_type": "skip"}
-inflation.index.strftime('%Y')[::12].to_numpy().tolist()
-
-# %% slideshow={"slide_type": "skip"}
-dates
-
-# %% slideshow={"slide_type": "skip"}
-dates[::12].strftime("%Y")
-
-# %% slideshow={"slide_type": "skip"}
-import matplotlib.pyplot as plt
-import pandas as pd
-import numpy as np
-
-# Generate some sample data (timestamps and corresponding values)
-dates = pd.date_range(start='2020-01-01', end='2022-12-31', freq='M')
-values = np.random.randint(0, 100, len(dates))
-
-# Create a plot
-plt.plot(dates, values)
-
-# Customize the x-axis ticks and labels
-plt.xticks(dates[::12].strftime("%Y"), rotation=45)  # Show ticks every 6 months and rotate the labels
-
-# Add labels and title
-plt.xlabel('Date')
-plt.ylabel('Values')
-plt.title('Values Over Time')
-
-# Show the plot
-plt.tight_layout()
-plt.show()
-
-
-# %% slideshow={"slide_type": "skip"}
-y_ticks = {}
-y_ticks["key"] = range(1, 8)
-y_ticks["value"] = [f"{y}%" for y in y_ticks["key"]]
-y_ticks
-
-# %% slideshow={"slide_type": "skip"}
-import matplotlib.pyplot as plt
-def plot_inf():
-    import matplotlib as mpl
-    figsize = (8, 4)
-
-    mpl.rcParams['font.size'] = 8
-    import matplotlib.pyplot as plt
-    from matplotlib.ticker import MaxNLocator
-    from matplotlib.ticker import MultipleLocator
-    import pandas as pd
-
-    fig, ax = plt.subplots(figsize=figsize)
-    if False:
-        fig.subplots_adjust(
-            left=0.05, 
-            # right=0.9, 
-            top=0.95, 
-            # bottom=0.1
-        )
-    y = inflation.loc["2000":]
-    y_max = "2028"
-    ax.plot(y.index, y)
-    ax.set_xlim(y.index.min(), pd.Timestamp(y_max))
-    ax.set_title(
-            "Zeitreihe der Inflationsrate: Prozentuale Veränderung des Verbraucherpreisindex"
-            " zum Vorjahresmonat\n Quelle: https://www.destatis.de/"
-        )
-
-    ax.axvline(
-        x=pd.Timestamp(corona_begin), color='red', linestyle='--', label='Corona Beginn'
-    )
-    ax.legend(fontsize="large")
-
-    # ax.xaxis.set_major_locator(MaxNLocator(integer=True))
-    # ax.xaxis.set_major_locator(MultipleLocator(1))
-    # ax.yaxis.set_major_locator(MaxNLocator(integer=True))
-    ax.grid(True, axis='x', linestyle='--', which='major')
-    # ax.xaxis.set_major_locator(plt.MultipleLocator(1))
-
-    # ax.set_xticks(inflation.index.strftime('%Y')[::48].to_numpy().tolist(), rotation=45) 
-    
-    xticks = pd.date_range(y.index.min(), y_max, freq= "MS")
-
-    cycle = 24
-    ax.set_xticks(xticks[::cycle], xticks.strftime('%Y')[::cycle], rotation=45);
-    # ax.set_yticks(y.index[::12], y.index.strftime('%Y')[::12], rotation=45);
-    
-    mpl.rcParams['font.size'] = 14; 
-    
-    y_ticks = {}
-    y_ticks["key"] = range(0, 8 + 1)
-    y_ticks["value"] = [f"{y}%" for y in y_ticks["key"]]
-
-
-    ax.set_yticks(y_ticks["key"], y_ticks["value"])
-    
-    ax.text(pd.Timestamp("2024-09"), 6.5, "?", fontsize=40, color="gray") # , ha='center', va='center')
-    ax.annotate("→", (pd.Timestamp("2025-09"), 6), fontsize=50, ha='center', va='center', color="gray")
-
-plot_inf()
-
-plt.savefig('figures/inflation.png', dpi=300)
-
-
-# %% slideshow={"slide_type": "skip"}
 # For interactive plots
 %matplotlib ipympl  
 
@@ -169,6 +46,7 @@ seed_value = 0; np.random.seed(seed_value);
 # - Die interaktive Präsentation kann wie folgt bedient werden:
 #     - `Leertaste`: Eine Folie weiter.
 #     - `Hochstelltaste + Leertaste`: Eine Folie zurück.
+#     - `Strg + Enter`: Laden eines interaktiven Plots.
 #     - `Alt + r`: Aktivieren bzw. Deaktivieren der Präsentation.
 #     - Falls ein interaktive Plot bei Ausführung einer Code Zelle nicht richtig positioniert ist, deaktiviere und aktiviere Sie die Präsentation indem sie zwei Mal `Alt + r` drücken.
 
@@ -290,6 +168,7 @@ seed_value = 0; np.random.seed(seed_value);
 # - Wichtig dass zu verstehen, in meiner Erfahrung war das unklar für manche Studierende oder sogar Doktoranden, dann ist auch alles leichter
 
 # %% slideshow={"slide_type": "fragment"} hide_input=false
+%matplotlib ipympl
 from plv.plot import data_vs_process
 data_vs_process(figsize=(14, 6.5))
 

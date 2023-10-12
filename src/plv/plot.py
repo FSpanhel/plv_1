@@ -944,3 +944,67 @@ class DataVsProcess:
                 
             fig.canvas.draw_idle()
             return
+
+
+def plot_inf():
+    import matplotlib as mpl
+    figsize = (8, 4)
+
+    mpl.rcParams['font.size'] = 8
+
+    fig, ax = plt.subplots(figsize=figsize)
+    if False:
+        fig.subplots_adjust(
+            left=0.05, 
+            # right=0.9, 
+            top=0.95, 
+            # bottom=0.1
+        )
+    y = inflation.loc["2000":]
+    y_max = "2028"
+    ax.plot(y.index, y)
+    ax.set_xlim(y.index.min(), pd.Timestamp(y_max))
+    ax.set_title(
+            "Zeitreihe der Inflationsrate: Prozentuale Veränderung"
+            " des Verbraucherpreisindex"
+            " zum Vorjahresmonat\n Quelle: https://www.destatis.de/"
+        )
+
+    ax.axvline(
+        x=pd.Timestamp(corona_begin), color='red', linestyle='--', label='Corona Beginn'
+    )
+    ax.legend(fontsize="large")
+
+    # ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+    # ax.xaxis.set_major_locator(MultipleLocator(1))
+    # ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+    ax.grid(True, axis='x', linestyle='--', which='major')
+    # ax.xaxis.set_major_locator(plt.MultipleLocator(1))
+    
+    xticks = pd.date_range(y.index.min(), y_max, freq= "MS")
+
+    cycle = 24
+    ax.set_xticks(xticks[::cycle], xticks.strftime('%Y')[::cycle], rotation=45)
+    # ax.set_yticks(y.index[::12], y.index.strftime('%Y')[::12], rotation=45);
+    
+    mpl.rcParams['font.size'] = 14
+    
+    y_ticks = {}
+    y_ticks["key"] = range(0, 8 + 1)
+    y_ticks["value"] = [f"{y}%" for y in y_ticks["key"]]
+
+
+    ax.set_yticks(y_ticks["key"], y_ticks["value"])
+    
+    ax.text(pd.Timestamp(
+        "2024-09"), 6.5, "?", fontsize=40, color="gray"
+    ) # , ha='center', va='center')
+    ax.annotate(
+        "→", (pd.Timestamp("2025-09"), 6), fontsize=50, ha='center', va='center',
+        color="gray"
+    )
+
+    mpl.rcParams['font.size'] = 10  # reset to default
+
+    plt.savefig('figures/inflation.png', dpi=300)
+
