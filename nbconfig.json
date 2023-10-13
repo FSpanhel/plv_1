@@ -1,0 +1,21 @@
+{
+    "load_extensions": {
+      "codefolding/main": true,
+      "collapsible_headings/main": true,
+      "qtconsole/qtconsole": true,
+      "ruler/main": true,
+      "toc2/main": true,
+      "code_font_size/code_font_size": true,
+      "python-markdown/main": true,
+      "splitcell/splitcell": true,
+      "hide_input/main": true
+    },
+    "rise": {
+      "enable_chalkboard": true,
+      "transition": "slide",
+      "slideNumber": "c/t",
+      "width": "100%",
+      "height": "100%",
+      "scroll": true
+    }
+}

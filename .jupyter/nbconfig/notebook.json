@@ -1,0 +1,10 @@
+{
+    "rise": {
+      "enable_chalkboard": true,
+      "transition": "slide",
+      "slideNumber": "c/t",
+      "width": "100%",
+      "height": "100%",
+      "scroll": true
+    }
+}

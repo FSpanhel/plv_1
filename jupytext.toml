@@ -1,0 +1,3 @@
+formats = "ipynb,_notebook_as_py//py:percent"  # save all notebooks as .py script with percent format in the subfolder _notebook_as_py
+comment_magics = false  # do not comment magic commands
+# cell_markers = '""","""'  # use multiline comments
