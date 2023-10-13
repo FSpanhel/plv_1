@@ -42,7 +42,7 @@
 # <div/>
 
 # %% [markdown] slideshow={"slide_type": "notes"}
-# 1. Welcome to my second presentation which is the introduction of the module data science projects.
+# 1. Welcome to my second presentation which is about data science projects.
 # 2. Data science projects is a lecture that is targeted at master students who like to work in the data science domain.
 # 3. This lecutre is the follow-up **to** the lecture Data Science Challenge / Projekt which I lecture at the moment for the bachelor students of Data Science and scientific computing.
 # 4. Just like DVC this lecture emphasis is on practical skills, problem-solving, and the ability to use data science tools and methods in practical scenarios.
@@ -110,6 +110,9 @@
 # <img src="./figures/ds_project_3.png" alt="Data Science Projects" style="width: 1600px;"/>
 
 # %% [markdown] slideshow={"slide_type": "notes"}
+#
+#
+#
 # 1. So what skills are needed in this data science project workflow?
 # 1. Regarding POC/ad hoch analyses
 #     - Communication is very important. But this best learned in the industry. (viele Fehler)
@@ -154,33 +157,20 @@
 
 # %% [markdown] slideshow={"slide_type": "subslide"}
 # **Model tuning with time series cross-validation**
-# <div style="display: flex; align-items: left;">
-#   <div style="flex: 1; padding: 30px; font-size: 25px;">
-#     <ol style="margin: 200; padding: 0">
-#       <li>Model training: A predictive model is trained on training data of length $T_{train}$.</li>
-#       <li>Validation: The model is scored on validation data of length $T_{val}$.</li>
-#       <li>Shifting: The end of the new training data is increased to $T_{train} + T_{val}$.</li>
-#       <li>Repeat Steps 1 - 3 until $T_{val} = 0$.</li>
-#       <li>Performance evaluation: Aggregate validation scores.</li>
-#     </ol>
-#   </div>
-#   <div style="flex: 2; padding: 0px;">
-#       <img src="./figures/ts_split.png" alt="Time Series Cross Validation" style="width: 700px;"/>
-#   </div>
-# </div>
+#
+# - Model training: A predictive model is trained on training data of length $T_{train}$.
+# - Validation: The model is scored on validation data of length $T_{val}$.
+# - Shifting: The end of the new training data is increased to $T_{train} + T_{val}$.
+# - Repeat Steps 1 - 3 until $T_{val} = 0$.
+# - Performance evaluation: Aggregate validation scores.
 #
 # Questions:
-# <ul style="margin: 200; padding: 0; font-size: 25px; margin-top: -20px">
-#   <li>How to specify ($T_{train}$, $T_{val}$) or the resulting folds?</li>
-#   <li>How to optimize the training length? Use $(w_tY_t)_{t=1,\ldots T_{train}}$ as training data, where $(w_t)_{t=1}^{T}$ is increasing in $t$ and can be obtained via cross-validation?</li>
-#   <li>Should the aggregation of validation scores be weighted equally, or should the results of validation sets closer to today be weighted more heavily?</li>
-#   <li>How to actually split the data into folds? </li>
-# </ul>
-#  
-# <!-- To the best of my knowledge there is no package available that covers important practical cases 
-# (split w.r.t. date, a set of time series, groups)
-# -->
-# <span style="font-size: 30px; margin-top: -20px">**These questions will be investigated with a hands-on project in this course!**</span>
+# - How to specify ($T_{train}$, $T_{val}$) or the resulting folds?
+# - How to optimize the training length? Use $(w_tY_t)_{t=1,\ldots T_{train}}$ as training data, where $(w_t)_{t=1}^{T}$ is increasing in $t$ and can be obtained via cross-validation?
+# - Should the aggregation of validation scores be weighted equally, or should the results of validation sets closer to today be weighted more heavily?
+# - How to actually split the data into folds?
+#
+# **These questions will be investigated with a hands-on project in this course!**
 
 # %% [markdown] slideshow={"slide_type": "slide"}
 # **MLOps: Managing the ML lifecycle with MLflow**
@@ -253,21 +243,15 @@ run()
 # <br>
 #
 # Students will experience the entire **Data Science workflow**, from defining the task to serving the model via an application or dashboard, through projects. 
-# <div style="display: flex; align-items: center; margin-top: -40px;">
-#   <div style="flex: 3; padding: 40px; font-size: 35px;">
-#     <ul style="list-style-type: disc; font-size: 30px; margin: 0; padding: 0;">
-#         <li>Deal with common problems when working with <strong>tabular data</strong>.</li>
-#         <li>Differentiate between <strong>prediction</strong> and <strong>causal inference</strong> tasks.</li>
-#         <li>Utilize <strong>cloud services</strong> for model training.</li>
-#         <li>Tackle model tuning in the presence of <strong>temporal dependence</strong> and perform multi-step forecasts.</li>
-#         <li><strong>Track</strong> models with MLflow.</li>
-#         <li><strong>Deploy</strong> machine learning models using Streamlit.</li>
-#     </ul>
-#   </div>
-#   <div style="flex: 0.1; padding: 50px;">
-#      <img src="./figures/ds_project_3.png" alt="Data Science Projects"/>
-#   </div>
-# </div>
+#
+# - Deal with common problems when working with **tabular data**.
+#
+# - Differentiate between **prediction** and **causal inference** tasks.
+# - Utilize **cloud services** for model training.
+# - Tackle model tuning in the presence of **temporal dependence** and perform multi-step forecasts.
+# - **Track** models with MLflow.
+# - **Deploy** machine learning models using Streamlit.
+#
 #
 
 # %% [markdown] slideshow={"slide_type": "slide"}
@@ -280,71 +264,3 @@ run()
 #
 # Kapoor, S., Narayanan, A. "Leakage and the reproducibility crisis in machine-learning-based science". Patterns, 100804, August 2023. https://doi:10.1016/j.patter.2023.100804.
 #
-
-# %% [markdown] slideshow={"slide_type": "slide"}
-# # Appendix
-
-# %% [markdown] slideshow={"slide_type": "slide"}
-# **Methodology: Multi-step forecasts**
-
-# %% [markdown] slideshow={"slide_type": "fragment"}
-# - In practice, one often has to provide multi-step forecasts $\big(\text{Pred}_t[Y_{t+h}]\big)_{h=1, \ldots, H}$.
-# - How can we obtain this sequence of forecasts?
-#
-
-# %% [markdown] slideshow={"slide_type": "fragment"}
-# - Recall: If $Y_t = aY_{t-1} + U_t$ then $\text{Pred}_t[Y_{t+h}] = a\text{Pred}_t[Y_{t+h-1}]$.
-#
-
-# %% [markdown] slideshow={"slide_type": "fragment"}
-# - What if $Y_t = f(Y_{t-1}) + U_t$?
-
-# %% [markdown] slideshow={"slide_type": "fragment"}
-# - Can we use $\text{Pred}_t[Y_{t+h}] = f\left(\text{Pred}_t[Y_{t+h-1}]\right)$?
-
-# %% [markdown] slideshow={"slide_type": "subslide"}
-# **Multi-step forecasts with features**
-#
-#
-# - What if $Y_t = f(Y_{t-1}, X_{t-1}) + U_t$ and we don't know $(X_{t})_{h=t+1,\ldots, t+H}$? 
-# - If $Y_t = aY_{t-1} + bX_{t-1} + U_t$, we have that
-#
-#     $
-#     \begin{align}
-#     \text{Pred}_t[Y_{t+1}] & = aY_{t} + bX_{t}\phantom{....}
-#     \end{align}
-#     $
-#
-#     but because we don't know $\text{Pred}_t[X_{t+1}]$ we cannot compute
-#
-#     $
-#     \begin{align}
-#     & \text{Pred}_t[Y_{t+2}] = a\text{Pred}_t[Y_{t+1}] + b\text{Pred}_t[X_{t+1}]
-#     \end{align}
-#     $
-
-# %% [markdown] slideshow={"slide_type": "fragment"}
-# - Possible solutions:
-#     1. Set up a model for $X_t$, e.g., $X_t = r(X_{t-1}, Y_{t-1}) + V_t$, to get the **indirect forecast**
-#     
-#         $\text{Pred}_t[Y_{t+h}] = f(\text{Pred}_t[Y_{t+h-1}], \text{Pred}_t[X_{t+h-1}])$
-#     2. For each forecast horizon $h$, set up a model $Y_{t+h} = f_h(Y_{t-1}, X_{t-1}) + U_{t,h}$ to get the **direct forecast** 
-#     
-#         $\text{Pred}_t[Y_{t+h}] = f_h(Y_{t-1}, X_{t-1})$
-
-# %% [markdown] slideshow={"slide_type": "subslide"}
-# **Multi-step forecasts with features: Possible solutions**
-#
-# 1. Get the **indirect forecast**
-#
-#     $\text{Pred}_t[Y_{t+h}] = f(\text{Pred}_t[Y_{t+h-1}], \text{Pred}_t[X_{t+h-1}])$
-# 2. Get the **direct forecast**
-#
-#     $\text{Pred}_t[Y_{t+h}] = f_h(Y_{t-1}, X_{t-1})$
-# - Note that 1. increases in the number of features, whereas 2. increases in the number of forecast horizons $h$.
-# - How to tune the corresponding models of 1. and 2.?
-# - How can we handle the data to do direct and indirect forecasts?
-# - Which approach is better?
-
-# %% [markdown] slideshow={"slide_type": "fragment"}
-# **These questions will be investigated with a hands-on project in this course!**

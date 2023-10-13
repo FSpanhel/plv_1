@@ -30,7 +30,7 @@
 #     - Falls ein interaktive Plot bei Ausführung einer Code Zelle nicht richtig positioniert ist, deaktiviere und aktiviere Sie die Präsentation indem sie zwei Mal `Alt + r` drücken.
 
 # %% [markdown] slideshow={"slide_type": "slide"}
-# <div align="center" style="font-size:60px;">
+# <div align="center" style="font-size:40px;">
 # Probelehrveranstaltung für die Professur für Angewandte Mathematik mit Schwerpunkt Statistical Learning
 # <br><br>
 # Stationarität von Zeitreihen mit Anwendung an einem praktischen Beispiel
@@ -47,17 +47,7 @@
 # # Einführung und Motivation
 
 # %% [markdown] slideshow={"slide_type": "fragment"}
-# <div style="display: flex; align-items: center; margin-top: -20px;">
-#   <div style="flex: 2; padding: 0px;">
-#      <img src="./figures/inflation.png" alt="Inflationsrate" style="width: 4200px; height: 620px;"/>
-#   </div>
-#   <div style="flex: 30; padding: 100px; font-size: 25px;">
-#     <ol style="margin: 0; padding: 0">
-#       <li>Die <strong>Inflationsrate</strong> ist die prozentuale Veränderung der Verbraucherpreise zum Vorjahresmonat.</li>
-#       <li>Aufgrund mehrerer Krisen ist die <strong>Inflationsrate</strong> seit 2 Jahren auf den höchsten Stand seit der Wiedervereinigung gestiegen.</li>
-#     </ol>
-#   </div>
-# </div>
+# <img src="./figures/inflation.png" alt="Inflationsrate" style="width: 4200px"/>
 
 # %% [markdown] slideshow={"slide_type": "slide"}
 # **Was ist eine Zeitreihe?**
@@ -93,7 +83,10 @@
 # %% [markdown] slideshow={"slide_type": "slide"}
 # **Illustration des Zusammenhangs zwischen Zeitreihendaten und -prozess**
 
-# %% slideshow={"slide_type": "fragment"} hide_input=false
+# %% [markdown] slideshow={"slide_type": "-"}
+# <img src="./figures/zeitreihen_1.png" alt="" style="width: 4200px"/>
+
+# %% slideshow={"slide_type": "skip"} hide_input=false
 %matplotlib ipympl
 from plv.plot import data_vs_process
 data_vs_process(figsize=(14, 6.5))
@@ -215,7 +208,11 @@ print(y)
 # %% [markdown] slideshow={"slide_type": "slide"}
 # Simulation von Realisierungen eines AR(1) Prozesses
 
-# %% slideshow={"slide_type": "-"}
+# %% [markdown] slideshow={"slide_type": "-"}
+# <img src="./figures/zeitreihen_2.png" alt="" style="width: 4200px"/>
+#
+
+# %% slideshow={"slide_type": "skip"}
 %matplotlib ipympl
 from plv.plot import sim_ar
 sim_ar(figsize=(16, 6))
@@ -223,7 +220,10 @@ sim_ar(figsize=(16, 6))
 # %% [markdown] slideshow={"slide_type": "slide"}
 # Simulation von Realisierungen eines AR(1) Prozesses: Analyse der Stationarität
 
-# %% slideshow={"slide_type": "-"}
+# %% [markdown] slideshow={"slide_type": "-"}
+# <img src="./figures/zeitreihen_3.png" alt="" style="width: 4200px"/>
+
+# %% slideshow={"slide_type": "skip"}
 %matplotlib ipympl
 sim_ar(figsize=(16, 6), plot_mean_var=True)
 
@@ -312,7 +312,10 @@ sim_ar(figsize=(16, 6), plot_mean_var=True)
 # %% [markdown] slideshow={"slide_type": "slide"}
 # **Modellierung der Inflationsrate mit einem AR(1) Prozess**
 
-# %% slideshow={"slide_type": "-"}
+# %% [markdown] slideshow={"slide_type": "-"}
+# <img src="./figures/zeitreihen_4.png" alt="" style="width: 4200px"/>
+
+# %% slideshow={"slide_type": "skip"}
 %matplotlib ipympl
 from plv.plot import forecast_inflation
 forecast_inflation(figsize=(16, 5.4))
@@ -335,7 +338,10 @@ forecast_inflation(figsize=(16, 5.4))
 # %% [markdown] slideshow={"slide_type": "slide"}
 # **Modellierung der Inflationsrate mit einem AR(1) Prozess mit Dummy**
 
-# %% slideshow={"slide_type": "-"}
+# %% [markdown] slideshow={"slide_type": "-"}
+# <img src="./figures/zeitreihen_5.png" alt="" style="width: 4200px"/>
+
+# %% slideshow={"slide_type": "skip"}
 %matplotlib ipympl
 forecast_inflation(dummy=True, figsize=(16, 5.4))
 

@@ -51,7 +51,7 @@
 #   - Good coding habits (Style, type hints, documentation, Git hooks).
 #   - Project management and collaborative coding using Git and GitLab.
 
-# %% [markdown] slideshow={"slide_type": "notes"}
+# %% [markdown] slideshow={"slide_type": "skip"}
 # Personal motivation for DSC and also here (I have a mathematical background and took me some to grasp how to build a product, I would have highly appreciate it if this was clear)
 # There is a young difference between an ad hoc analysis or building a data product
 #
@@ -101,12 +101,6 @@
 #
 # **The goal of this course is to address the changes that have occurred in recent years and provide students with skills that might gain them a competitive advantage.**
 
-# %% [markdown] slideshow={"slide_type": "skip"}
-# - But it’s likely because the data science role is getting split into multiple different titles. And conveniently cheaper ones. 
-# - Salaries have decreased (More people, and also shift to ML, reddit links, also influenced by recession, Downgrading data scientists to DA, DS -> ML, DS -> DE)
-# - Very few junior roles, Demand for senior roles
-# - LLMs… (Do we still need DA or people with DL Knowledge, or people how anbinden APIs from the Great Tech Giants?)
-
 # %% [markdown] slideshow={"slide_type": "notes"}
 # [2 Min]
 #
@@ -126,9 +120,19 @@
 
 # %% [markdown] slideshow={"slide_type": "slide"}
 # **Data Science Project Workflow**
+# <img src="./figures/ds_project_0.png" alt="Data Science Projects" style="width: 1600px;"/>
 
-# %% [markdown] slideshow={"slide_type": "-"}
-#  <img src="./figures/dsp.png" alt="Data Science Projects" style="width: 1300px;"/>
+# %% [markdown] slideshow={"slide_type": "subslide"}
+# **Data Science Project Workflow**
+# <img src="./figures/ds_project_1.png" alt="Data Science Projects" style="width: 1600px;"/>
+
+# %% [markdown] slideshow={"slide_type": "subslide"}
+# **Data Science Project Workflow**
+# <img src="./figures/ds_project_2.png" alt="Data Science Projects" style="width: 1600px;"/>
+
+# %% [markdown] slideshow={"slide_type": "subslide"}
+# **Data Science Project Workflow**
+# <img src="./figures/ds_project_3.png" alt="Data Science Projects" style="width: 1600px;"/>
 
 # %% [markdown] slideshow={"slide_type": "notes"}
 # [6 Min]
