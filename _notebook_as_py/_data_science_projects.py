@@ -41,6 +41,13 @@
 # <div align="left" style="font-size:16px;">
 # <div/>
 
+# %% [markdown] slideshow={"slide_type": "notes"}
+# 1. Welcome to my second presentation which is the introduction of the module data science projects.
+# 2. Data science projects is a lecture that is targeted at master students who like to work in the data science domain.
+# 3. This lecutre is the follow-up **to** the lecture Data Science Challenge / Projekt which I lecture at the moment for the bachelor students of Data Science and scientific computing.
+# 4. Just like DVC this lecture emphasis is on practical skills, problem-solving, and the ability to use data science tools and methods in practical scenarios.
+# 5. For this purpose, this course provides hands-on projects and case studies.
+
 # %% [markdown] slideshow={"slide_type": "slide"}
 # **How has data science changed in the last years?**
 # - From on-premise to cloud.
@@ -57,6 +64,16 @@
 #
 #
 
+# %% [markdown] slideshow={"slide_type": "notes"}
+# 1. What practical skills should students or graduates have these days?
+# 2. Well, let's take a look back at the last seven years that have passed since I've been working in the industry.
+# 3. First of all, the tools with which data scientist work have changed a lot. Ten years ago, it was like the wild west and there were few tools and standards available.
+#     - Most importantly, analytics as well as development and management of ML models have largely shifted to the cloud for several reasons.
+# 4. Relatively speaking, there are less POCs and more models are put into production and need to be managed. As a consequence, software engineering becomes more crucial.
+# 5. Previously, a data scienctist was a unicorn, meaning they did all required tasks — from conceptualizing the use case, to 
+# interfacing with business and technology stakeholders, to developing the algorithm and deploying it into production. 
+# While this may still be true, there is a **continued differentiation of responsibilities**. Like **machine learning engineers**, **data engineers**, **advanced analytics**, and **data oriented product managers**.
+
 # %% [markdown] slideshow={"slide_type": "fragment"}
 # See also ["**Is Data Scientist Still the Sexiest Job of the 21st Century?**"](https://hbr.org/2022/07/is-data-scientist-still-the-sexiest-job-of-the-21st-century)
 #
@@ -66,17 +83,47 @@
 # **Data Science Project Workflow**
 # <img src="./figures/ds_project_0.png" alt="Data Science Projects" style="width: 1600px;"/>
 
+# %% [markdown] slideshow={"slide_type": "notes"}
+# 1. In general, a data science project is often a cross-functional project that requires team to work together.
+#     1. On the left hand side we have the business intelligence or analytics people, or people with a math/stats background (blue) and on the right we have people with an information science background or software engineers (green).
+#     1. This color gradient should highlight that boundaries between these roles are not strict and evolving.
+
 # %% [markdown] slideshow={"slide_type": "subslide"}
 # **Data Science Project Workflow**
 # <img src="./figures/ds_project_1.png" alt="Data Science Projects" style="width: 1600px;"/>
+
+# %% [markdown] slideshow={"slide_type": "notes"}
+# 1. The center of a data science project is data.
+# 1. This data is used to kick-off a POC or to do an ad hoc analysis.
 
 # %% [markdown] slideshow={"slide_type": "subslide"}
 # **Data Science Project Workflow**
 # <img src="./figures/ds_project_2.png" alt="Data Science Projects" style="width: 1600px;"/>
 
+# %% [markdown] slideshow={"slide_type": "notes"}
+# 1. The outcome of this POC or ad hoc analysis could be a report/app.
+# 1. Or it could be deployment and management of a machine learning model.
+#     1. This model could also then end in an app or dashboard.
+
 # %% [markdown] slideshow={"slide_type": "subslide"}
 # **Data Science Project Workflow**
 # <img src="./figures/ds_project_3.png" alt="Data Science Projects" style="width: 1600px;"/>
+
+# %% [markdown] slideshow={"slide_type": "notes"}
+# 1. So what skills are needed in this data science project workflow?
+# 1. Regarding POC/ad hoch analyses
+#     - Communication is very important. But this best learned in the industry. (viele Fehler)
+#     - Dev:
+#         - local / cloud + Metaflow
+#         - 
+#     - Sensibilisieren Kausalität, Trade-off Prediction und Causal Inference.
+# 1. Depending on the organization a data scientist might involved or not involved in MLOps. Irrespective of that, there are skills that a data scientist can process to support the interaction with ML or software engineers. -> passt nicht, hier eher sagen dass da auch stats skills gebraucht werden
+#     - MLOps
+#         - Model, Feature & Target drift
+# 1. Regarding Apps/Dashboard.
+#     - Especially for POCs the ability to provide an application is crucial. It is important that a DS can present his results. Früher war das schwierig, weil man einen FrontEnd Entwickler brauchte. Heute ist das spielend einfach mit Streamlit. man muss nur wissen dass es das gibt.
+#     
+# For this presentation, I pick some skills/tools and give a short introduction so that it's possible to get an impression of what to expect from this course.
 
 # %% [markdown] slideshow={"slide_type": "slide"}
 # **AWS Cloud services**
@@ -150,6 +197,9 @@
 #
 # **We will use Mlflow for the project in this course to manage the machine learning lifecycle!**
 
+# %% [markdown] slideshow={"slide_type": "notes"}
+# Who knows MLflow?
+
 # %% [markdown] slideshow={"slide_type": "slide"}
 # **MLflow Demo**
 
@@ -194,6 +244,9 @@ run()
 # - Examples: [Analytics Dashoboard](https://shamiraty-streamlit-dashboard-descriptive-analytics-home-5ks7sm.streamlit.app/), [MathGPT](https://mathgpt.streamlit.app/).
 #
 # **We will be using Streamlit to build an App for the machine learning model of our project!**
+
+# %% [markdown] slideshow={"slide_type": "notes"}
+# Who knows Streamlit?
 
 # %% [markdown] slideshow={"slide_type": "slide"}
 # **Learning objectives** 
